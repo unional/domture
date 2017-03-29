@@ -1,0 +1,93 @@
+{
+  "name": "jsdom-systemjs",
+  "description": "",
+  "version": "0.0.0",
+  "main": "dist/es5/index.js",
+  "module": "dist/es2015/index.js",
+  "typings": "dist/es5/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "npm run clean && npm run build-es5 && npm run build-es2015",
+    "build-es2015": "tsc -p tsconfig.es2015.json",
+    "build-es5": "tsc -p tsconfig.es5.json",
+    "bundle": "npm run bundle-es2015 && npm run bundle-es5",
+    "bundle-es2015": "rollup --config rollup.config.es2015.js",
+    "bundle-es5": "webpack --config webpack.config.es5.js",
+    "clean": "rimraf dist/es5 dist/es2015",
+    "dc": "npm run dependency-check",
+    "dependency-check": "dependency-check . --unused --no-dev && dependency-check . --missing --no-dev",
+    "lint": "tslint \"src/**/*.ts\"",
+    "postpublish": "git push",
+    "preversion": "git pull && npm run verify",
+    "version": "npm run remove-spec && npm run bundle && git add -f dist/jsdom-systemjs*",
+    "verify": "npm run lint && npm run coverage && npm run dependency-check",
+    "coverage": "nyc --check-coverage --branches 85 --functions 85 --lines 85 npm test",
+    "coveralls": "nyc report --reporter=text-lcov | coveralls",
+    "remove-spec": "rimraf dist/es5/**/*.spec.*",
+    "test": "npm run clean && tsc && ava",
+    "watch": "npm run clean && node scripts/watch.js"
+  },
+  "author": {
+    "name": "Homa Wong",
+    "email": "homawong@gmail.com"
+  },
+  "homepage": "https://github.com/unional/jsdom-systemjs",
+  "bugs": {
+    "url": "https://github.com/unional/jsdom-systemjs/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/unional/jsdom-systemjs.git"
+  },
+  "license": "MIT",
+  "ava": {
+    "files": [
+      "dist/es5/**/*.spec.js"
+    ],
+    "source": [
+      "scripts/*.js",
+      "dist/es5/**/*.js",
+      "*.json"
+    ],
+    "require": [
+      "./scripts/setup-browser-env.js",
+      "./scripts/setup-test-env.js"
+    ]
+  },
+  "nyc": {
+    "exclude": [
+      "scripts",
+      "**/*.spec.*",
+      "**/fixtures/**/*"
+    ]
+  },
+  "devDependencies": {
+    "aurelia-logging-color": "^0.5.2",
+    "ava": "^0.18.2",
+    "core-js": "^2.4.1",
+    "dependency-check": "^2.8.0",
+    "eslint": "^3.18.0",
+    "eslint-config-unional": "^0.2.3",
+    "jsdomify": "^3.1.0",
+    "nyc": "^10.2.0",
+    "param-case": "^2.1.1",
+    "pascal-case": "^2.0.1",
+    "rimraf": "^2.6.1",
+    "rollup": "^0.41.6",
+    "rollup-plugin-commonjs": "^8.0.2",
+    "rollup-plugin-node-builtins": "^2.1.0",
+    "rollup-plugin-node-globals": "^1.1.0",
+    "rollup-plugin-node-resolve": "^2.0.0",
+    "rollup-plugin-sourcemaps": "^0.4.1",
+    "source-map-loader": "^0.2.0",
+    "tslint": "^4.5.1",
+    "tslint-config-unional": "^0.7.0",
+    "typescript": "^2.2.2",
+    "webpack": "^2.2.0"
+  },
+  "dependencies": {
+    "aurelia-logging": "^1.3.1"
+  }
+}

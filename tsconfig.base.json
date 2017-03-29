@@ -1,0 +1,22 @@
+{
+  "compilerOptions": {
+    "declaration": true,
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "inlineSources": true,
+    "lib": [
+      "dom",
+      "es2015",
+      "es2015.reflect"
+    ],
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "newLine": "LF",
+    "noImplicitAny": false,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "removeComments": false,
+    "sourceMap": true,
+    "strictNullChecks": true
+  }
+}
