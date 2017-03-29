@@ -1,6 +1,6 @@
 {
-  "name": "jsdom-systemjs",
-  "description": "",
+  "name": "domster",
+  "description": "Test harness with jsdom + SystemJS + Node",
   "version": "0.0.0",
   "main": "dist/es5/index.js",
   "module": "dist/es2015/index.js",
@@ -64,12 +64,15 @@
     ]
   },
   "devDependencies": {
+    "@types/node": "^7.0.12",
+    "@types/systemjs": "^0.20.2",
     "aurelia-logging-color": "^0.5.2",
     "ava": "^0.18.2",
     "core-js": "^2.4.1",
     "dependency-check": "^2.8.0",
     "eslint": "^3.18.0",
     "eslint-config-unional": "^0.2.3",
+    "global-store": "^0.6.0",
     "jsdomify": "^3.1.0",
     "nyc": "^10.2.0",
     "param-case": "^2.1.1",
@@ -88,6 +91,10 @@
     "webpack": "^2.2.0"
   },
   "dependencies": {
-    "aurelia-logging": "^1.3.1"
+    "deep-extend": "^0.4.1",
+    "file-url": "^2.0.2",
+    "jsdom": "^9.11.0",
+    "plugin-typescript": "^7.0.6",
+    "systemjs": "^0.20.10"
   }
 }
