@@ -23,7 +23,7 @@
     "preversion": "git pull && npm run verify",
     "version": "npm run remove-spec && npm run bundle && git add -f dist/jsdom-systemjs*",
     "verify": "npm run lint && npm run coverage && npm run dependency-check",
-    "coverage": "nyc --check-coverage --branches 85 --functions 85 --lines 85 npm test",
+    "coverage": "nyc npm test",
     "coveralls": "nyc report --reporter=text-lcov | coveralls",
     "remove-spec": "rimraf dist/es5/**/*.spec.*",
     "test": "npm run clean && tsc && ava",
