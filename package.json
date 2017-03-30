@@ -1,6 +1,6 @@
 {
-  "name": "domster",
-  "description": "Test harness with jsdom + SystemJS + Node",
+  "name": "domture",
+  "description": "Test fixture with jsdom + SystemJS + Node",
   "version": "0.0.0",
   "main": "dist/es5/index.js",
   "module": "dist/es2015/index.js",

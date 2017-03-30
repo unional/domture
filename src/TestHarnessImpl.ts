@@ -15,7 +15,6 @@ export class TestHarnessImpl {
       return this.resolveRelative(identifier)
     }
 
-    console.log(await this.systemjs.resolve(identifier))
     const result = await this.systemjs.import(identifier)
     return result
   }

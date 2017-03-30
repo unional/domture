@@ -1,20 +1,14 @@
 import extend = require('deep-extend')
 const configMap = {
   npm: {
-    paths: {
-      'npm:': './node_modules/'
-    },
-    baseURL: '/',
+    baseURL: 'node_modules',
     packageConfigPaths: [
-      'npm:@*/*/package.json',
-      'npm:*/package.json'
+      '@*/*/package.json',
+      '*/package.json'
     ]
   },
   ts: {
     packages: {
-      'ts': {
-        'main': 'plugin.js'
-      },
       'typescript': {
         'main': 'lib/typescript.js',
         'meta': {
@@ -25,10 +19,10 @@ const configMap = {
       }
     },
     map: {
-      'ts': './node_modules/plugin-typescript/lib',
+      'plugin-typescript': './node_modules/plugin-typescript/lib/plugin.js',
       'typescript': './node_modules/typescript'
     },
-    transpiler: 'ts'
+    transpiler: 'plugin-typescript'
   }
 }
 

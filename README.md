@@ -1,4 +1,4 @@
-# domster
+# domture
 
 [![unstable][unstable-image]][unstable-url]
 [![NPM version][npm-image]][npm-url]
@@ -6,7 +6,7 @@
 [![Build status][travis-image]][travis-url]
 [![Coverage Status][coveralls-image]][coveralls-url]
 
-Creates a jsdom environment and load packages using systemjs.
+Creates a `jsdom` environment and load packages installed from `npm` using `systemjs`.
 
 ## Contribute
 
