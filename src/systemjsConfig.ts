@@ -67,12 +67,7 @@ const writtenInMap = {
 export function toSystemJSConfig(config: Config) {
   let sys: any = baseMap[config.packageManager]()
   extend(sys, writtenInMap[config.writtenIn](config.srcRoot))
-
-  config.packageMainsToFix.forEach(p => {
-    sys.packages[p] = {
-      main: 'index'
-    }
-  })
+  extend(sys.packages, config.packages)
 
   return sys
 }

@@ -4,7 +4,7 @@ import { Config } from './interfaces'
 
 export const defaultConfig: Config = {
   packageManager: 'npm',
-  packageMainsToFix: [],
+  packages: {},
   srcRoot: '.',
   writtenIn: 'es5'
 }

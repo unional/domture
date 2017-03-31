@@ -25,9 +25,21 @@ test('import cjs', async t => {
 test('load ts', async t => {
   const harness = await create({
     srcRoot: './fixtures/ts',
-    writtenIn: 'ts',
-    packageMainsToFix: ['file-url']
+    writtenIn: 'ts'
   })
-  const impl = await harness.import('./foo.ts')
+  const impl = await harness.import('./foo')
   t.is(typeof impl, 'object')
+})
+
+test.only('fix missing main', async t => {
+  const domture = await create({
+    srcRoot: './fixtures/fix-main',
+    packages: {
+      // 'make-error': {
+      //   main: 'index'
+      // }
+    }
+  })
+  const m = await domture.import('./index')
+  console.log(m)
 })

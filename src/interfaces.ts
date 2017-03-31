@@ -1,3 +1,5 @@
+require('systemjs')
+
 export interface TestHarness {
   /**
    * Window and any global namespaces.
@@ -18,7 +20,7 @@ export interface TestHarness {
 
 export interface Config {
   packageManager: 'npm' | 'jspm',
-  packageMainsToFix: string[],
+  packages: { [packageName: string]: SystemJSLoader.PackageConfig },
   srcRoot: string,
   writtenIn: 'es5' | 'ts'
 }

@@ -10,21 +10,19 @@ export class TestHarnessImpl {
    * Module name: `color-map`,
    * Relative path (from root): `./src/index.js`
    */
-  async import(identifier: string) {
-    if (this.isRelative(identifier)) {
-      return this.resolveRelative(identifier)
-    }
+  import(identifier: string) {
+    const id = this.isRelative(identifier) ? identifier.replace('.', 'app') : identifier
 
-    const result = await this.systemjs.import(identifier)
-    return result
+    console.log('importing', id)
+    return this.systemjs.import(id)
+      .then(() => {
+        console.log('then')
+      }, () => {
+        console.log('other')
+      })
   }
 
   private isRelative(identifier: string) {
     return identifier.indexOf('.') === 0
-  }
-
-  private resolveRelative(identifier: string) {
-    const id = identifier.replace('.', 'app')
-    return this.systemjs.import(id)
   }
 }

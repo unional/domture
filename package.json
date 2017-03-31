@@ -71,6 +71,7 @@
     "eslint": "^3.18.0",
     "eslint-config-unional": "^0.2.3",
     "global-store": "^0.6.0",
+    "make-error": "^1.2.3",
     "nyc": "^10.2.0",
     "rimraf": "^2.6.1",
     "tslint": "^4.5.1",
