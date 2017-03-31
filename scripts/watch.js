@@ -6,7 +6,7 @@ let ava;
 cp.spawn('tsc', ['-w'], { shell: true })
   .stdout.on('data', (data) => {
     if (!ava) {
-      ava = cp.spawn('ava', ['-w'], {
+      ava = cp.spawn('ava', ['-w', '--verbose'], {
         stdio: 'inherit',
         shell: true
       })

@@ -1,33 +1,33 @@
-import { env, createVirtualConsole, Config } from 'jsdom'
-import * as SystemJS from 'systemjs'
 import * as extend from 'deep-extend'
 import * as fileUrl from 'file-url'
+import { env, createVirtualConsole } from 'jsdom'
 
-import { TestHarness } from './interfaces'
+import { defaultConfig, unpartial } from './config'
+import { TestHarness, Config } from './interfaces'
 import { TestHarnessImpl } from './TestHarnessImpl'
-import { SystemJSConfigBuilder } from './SystemJSConfigBuilder'
+import { toSystemJSConfig } from './systemjsConfig'
 
-export function createTypeScript() {
-  const builder = new SystemJSConfigBuilder()
-  builder.useTypeScript()
-  console.log(builder.build())
-  return create(builder.build())
+export function createTypeScript(srcRoot: string = '.') {
+  const config = { ...defaultConfig }
+  config.srcRoot = srcRoot
+  return create(config)
 }
 
-export function create(systemJSConfig: SystemJSLoader.Config = new SystemJSConfigBuilder().build(), jsdomConfig: Config = {}): Promise<TestHarness> {
-  let window: Window
-  let systemjs: typeof SystemJS
+export function create(partialConfig?: Partial<Config>): Promise<TestHarness> {
+  const config = unpartial(partialConfig)
+  const sysConfig = toSystemJSConfig(config)
+  const jsdomConfig = {}
 
   // Add `console.debug` to NodeJS environment.
   // so that debug message can be written
   console.debug = console.debug || console.log
+
   return setupJsDom(jsdomConfig)
     .then((win) => {
-      window = win
-      systemjs = win.SystemJS
-      systemjs.config(systemJSConfig)
+      const systemjs = win.SystemJS
+      systemjs.config(sysConfig)
 
-      return new TestHarnessImpl(window)
+      return new TestHarnessImpl(win)
     })
 }
 
@@ -44,15 +44,6 @@ function setupJsDom(jsdomConfig) {
       jsdomConfig,
       {
         done(err, win) {
-          if (jsdomConfig.done) {
-            try {
-              jsdomConfig.done(err, win)
-            }
-            catch (e) {
-              reject(e)
-            }
-          }
-
           if (err)
             reject(err)
           else

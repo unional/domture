@@ -15,3 +15,10 @@ export interface TestHarness {
    */
   get(path: string): any
 }
+
+export interface Config {
+  packageManager: 'npm' | 'jspm',
+  packageMainsToFix: string[],
+  srcRoot: string,
+  writtenIn: 'es5' | 'ts'
+}

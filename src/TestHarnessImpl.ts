@@ -24,6 +24,7 @@ export class TestHarnessImpl {
   }
 
   private resolveRelative(identifier: string) {
-    return this.systemjs.import(identifier)
+    const id = identifier.replace('.', 'app')
+    return this.systemjs.import(id)
   }
 }
