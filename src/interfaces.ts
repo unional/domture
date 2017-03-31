@@ -20,7 +20,14 @@ export interface TestHarness {
 
 export interface Config {
   packageManager: 'npm' | 'jspm',
+  /**
+   * Packages config as in `systemjs`.
+   */
   packages: { [packageName: string]: SystemJSLoader.PackageConfig },
+  /**
+   * Folder for your source code.
+   * It should be relative: `./some-folder`
+   */
   srcRoot: string,
   writtenIn: 'es5' | 'ts'
 }

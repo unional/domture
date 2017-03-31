@@ -5,7 +5,7 @@ import { Config } from './interfaces'
 export const defaultConfig: Config = {
   packageManager: 'npm',
   packages: {},
-  srcRoot: '.',
+  srcRoot: './src',
   writtenIn: 'es5'
 }
 
