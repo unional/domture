@@ -13,13 +13,7 @@ export class TestHarnessImpl {
   import(identifier: string) {
     const id = this.isRelative(identifier) ? identifier.replace('.', 'app') : identifier
 
-    console.log('importing', id)
     return this.systemjs.import(id)
-      .then(() => {
-        console.log('then')
-      }, () => {
-        console.log('other')
-      })
   }
 
   private isRelative(identifier: string) {

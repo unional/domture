@@ -31,15 +31,15 @@ test('load ts', async t => {
   t.is(typeof impl, 'object')
 })
 
-test.only('fix missing main', async t => {
+test('fix missing main', async t => {
   const domture = await create({
     srcRoot: './fixtures/fix-main',
     packages: {
-      // 'make-error': {
-      //   main: 'index'
-      // }
+      'make-error': {
+        main: 'index'
+      }
     }
   })
   const m = await domture.import('./index')
-  console.log(m)
+  t.is(m.name, 'makeError')
 })
