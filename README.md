@@ -8,6 +8,35 @@
 
 Creates a `jsdom` environment and load packages installed from `npm` using `systemjs`.
 
+## Usage
+
+```ts
+import test from 'ava' // or your favorite test runner
+import { create } from 'domture'
+
+test('basic usage', async t => {
+  const domture = await create()
+
+  // load package `foo`
+  const foo = await domture.import('foo')
+
+  // load relative (by default relative to `./src`)
+  const config = await domture.import('./config')
+})
+
+test('customize', async t => {
+  const domture = await create({
+    writtenIn: 'ts', // import TypeScript source code directly,
+    packages: {
+      // This is need for some packages due to https://github.com/systemjs/systemjs/issues/1603
+      'make-error': {
+        main: 'index'
+      }
+    }
+  })
+})
+```
+
 ## Contribute
 
 ```sh
