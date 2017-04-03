@@ -32,7 +32,7 @@ test('import relative', async t => {
   t.is(typeof foo, 'function')
 })
 
-test('load ts', async t => {
+test.only('load ts', async t => {
   const domture = await create({
     srcRoot: './fixtures/ts',
     writtenIn: 'ts'
@@ -41,7 +41,7 @@ test('load ts', async t => {
   t.is(typeof m, 'object')
 
   const getLogger = await domture.import('./getLogger')
-  console.log('ts', getLogger)
+  t.is(getLogger.getLog, getLogger.getLogger)
 })
 
 test('fix missing main', async t => {

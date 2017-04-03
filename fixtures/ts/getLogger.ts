@@ -1,3 +1,3 @@
-import { getLogger } from '@unional/logging'
+import { getLogger, getLog } from '@unional/logging'
 
 export { getLogger }
