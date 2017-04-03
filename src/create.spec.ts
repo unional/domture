@@ -37,11 +37,13 @@ test('load ts', async t => {
     srcRoot: './fixtures/ts',
     writtenIn: 'ts'
   })
-  const m = await domture.import('./index')
-  t.is(typeof m, 'object')
+  const indexModule = await domture.import('./index')
+  t.is(typeof indexModule, 'object')
 
-  const getLogger = await domture.import('./getLogger')
-  t.is(getLogger.getLogger.name, 'getLogger')
+  const getLoggerModule = await domture.import('./getLogger')
+  console.log(getLoggerModule)
+  console.log(getLoggerModule.getLogger)
+  t.is(getLoggerModule.getLogger.name, 'getLogger')
 })
 
 test('fix missing main', async t => {
