@@ -14,22 +14,22 @@ test('import es6', async t => {
   const globalStore = await domture.import('global-store')
 
   t.is(typeof globalStore, 'object')
+  t.is(globalStore.default.name, 'create')
 })
 
 test('import relative with default', async t => {
   const domture = await create({ writtenIn: 'ts' })
 
-  const config = await domture.import('./config')
-
-  t.truthy(config.defaultConfig)
+  const config = await domture.import('./log')
+  t.truthy(config)
 })
 
 test('import relative', async t => {
   const domture = await create({
     srcRoot: './fixtures/cjs'
   })
-  const impl = await domture.import('./index')
-  t.is(typeof impl, 'function')
+  const foo = await domture.import('./index')
+  t.is(typeof foo, 'function')
 })
 
 test('load ts', async t => {
@@ -37,8 +37,11 @@ test('load ts', async t => {
     srcRoot: './fixtures/ts',
     writtenIn: 'ts'
   })
-  const impl = await domture.import('./foo')
-  t.is(typeof impl, 'object')
+  const m = await domture.import('./index')
+  t.is(typeof m, 'object')
+
+  const getLogger = await domture.import('./getLogger')
+  console.log('ts', getLogger)
 })
 
 test('fix missing main', async t => {

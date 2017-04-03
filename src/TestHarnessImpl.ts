@@ -11,7 +11,8 @@ export class TestHarnessImpl {
    * Relative path (from root): `./src/index.js`
    */
   import(identifier: string) {
-    const id = this.isRelative(identifier) ? identifier.replace('.', 'app') : identifier
+    const id = this.isRelative(identifier) ?
+      identifier.replace('.', 'app') : identifier
 
     return this.systemjs.import(id)
   }

@@ -2,7 +2,7 @@ import extend = require('deep-extend')
 
 import { Config } from './interfaces'
 
-const baseMap = {
+const packageManagers = {
   npm() {
     return {
       baseURL: 'node_modules',
@@ -25,7 +25,7 @@ const baseMap = {
   }
 }
 
-const writtenInMap = {
+const writtenIn = {
   es5(srcRoot: string) {
     return {
       map: {
@@ -65,8 +65,9 @@ const writtenInMap = {
 }
 
 export function toSystemJSConfig(config: Config) {
-  let sys: any = baseMap[config.packageManager]()
-  extend(sys, writtenInMap[config.writtenIn](config.srcRoot))
+  let sys: any = packageManagers[config.packageManager]()
+
+  extend(sys, writtenIn[config.writtenIn](config.srcRoot))
   extend(sys.packages, config.packages)
 
   return sys
