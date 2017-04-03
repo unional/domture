@@ -41,7 +41,7 @@ test('load ts', async t => {
   t.is(typeof m, 'object')
 
   const getLogger = await domture.import('./getLogger')
-  console.log('ts', getLogger)
+  t.is(getLogger.getLogger.name, 'getLogger')
 })
 
 test('fix missing main', async t => {
