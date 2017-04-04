@@ -52,7 +52,7 @@ function setupJsDom(jsdomConfig) {
       })
 
     // `deep-extend` can't merge array, so need to push it here instead of declaring above.
-    config.scripts.push(require.resolve('systemjs'))
+    config.scripts.push(require.resolve('systemjs/dist/system.js'))
     env(config)
   })
 }
