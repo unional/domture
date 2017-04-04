@@ -56,3 +56,16 @@ test('fix missing main', async t => {
   const m = await domture.import('./index')
   t.is(m.name, 'makeError')
 })
+
+test('use map', async t => {
+  const domture = await create({
+    srcRoot: './fixtures/cjs',
+    map: {
+      'xyz': './fixtures/cjs/index'
+    }
+  })
+  const foo = await domture.import('xyz')
+  t.is(typeof foo, 'function')
+  const foo2 = await domture.import('./index')
+  t.is(foo, foo2)
+})

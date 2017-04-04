@@ -1,4 +1,6 @@
-export class TestHarnessImpl {
+import { Domture } from './interfaces'
+
+export class DomtureImpl implements Domture {
   private systemjs: typeof SystemJS
   constructor(public window: Window) {
     this.systemjs = (window as any).SystemJS

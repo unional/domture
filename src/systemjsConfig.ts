@@ -69,6 +69,7 @@ export function toSystemJSConfig(config: Config) {
 
   extend(sys, writtenIn[config.writtenIn](config.srcRoot))
   extend(sys.packages, config.packages)
+  extend(sys.map, config.map)
 
   return sys
 }

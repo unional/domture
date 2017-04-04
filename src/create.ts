@@ -3,8 +3,8 @@ import * as fileUrl from 'file-url'
 import { env, createVirtualConsole } from 'jsdom'
 
 import { defaultConfig, unpartial } from './config'
-import { TestHarness, Config } from './interfaces'
-import { TestHarnessImpl } from './TestHarnessImpl'
+import { Domture, Config } from './interfaces'
+import { DomtureImpl } from './DomtureImpl'
 import { toSystemJSConfig } from './systemjsConfig'
 
 export function createTypeScript(srcRoot: string = '.') {
@@ -13,7 +13,7 @@ export function createTypeScript(srcRoot: string = '.') {
   return create(config)
 }
 
-export function create(partialConfig?: Partial<Config>): Promise<TestHarness> {
+export function create(partialConfig?: Partial<Config>): Promise<Domture> {
   const config = unpartial(partialConfig)
   const sysConfig = toSystemJSConfig(config)
   const jsdomConfig = {}
@@ -27,7 +27,7 @@ export function create(partialConfig?: Partial<Config>): Promise<TestHarness> {
       const systemjs = win.SystemJS
       systemjs.config(sysConfig)
 
-      return new TestHarnessImpl(win)
+      return new DomtureImpl(win)
     })
 }
 

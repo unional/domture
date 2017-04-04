@@ -1,6 +1,6 @@
 require('systemjs')
 
-export interface TestHarness {
+export interface Domture {
   /**
    * Window and any global namespaces.
    */
@@ -11,11 +11,6 @@ export interface TestHarness {
    * or relative path (`./js/pan/base/grid`)
    */
   import(identifier: string): Promise<any>
-  /**
-   * Get the specified target from global namespace.
-   * @param path Path to the target, e.g. 'Pan.base.grid'
-   */
-  get(path: string): any
 }
 
 export interface Config {
@@ -29,5 +24,6 @@ export interface Config {
    * It should be relative: `./some-folder`
    */
   srcRoot: string,
+  map: { [index: string]: string },
   writtenIn: 'es5' | 'ts'
 }

@@ -3,6 +3,7 @@ import extend = require('deep-extend')
 import { Config } from './interfaces'
 
 export const defaultConfig: Config = {
+  map: {},
   packageManager: 'npm',
   packages: {},
   srcRoot: './src',
