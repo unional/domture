@@ -26,13 +26,17 @@ test('basic usage', async t => {
 
 test('customize', async t => {
   const domture = await create({
+    srcRoot: './lib',
     writtenIn: 'ts', // import TypeScript source code directly,
-    packages: {
-      // This is need for some packages due to https://github.com/systemjs/systemjs/issues/1603
-      'make-error': {
-        main: 'index'
+    systemjsConfig: {
+      packages: {
+        // This is need for some packages due to https://github.com/systemjs/systemjs/issues/1603
+        'make-error': {
+          main: 'index'
+        }
       }
-    }
+    },
+    jsdomConfig: { ... }
   })
 })
 ```
