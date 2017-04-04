@@ -14,11 +14,19 @@ export interface Domture {
 }
 
 export interface Config {
+  /**
+   * Callback function to be called when the domture is created.
+   */
+  onCreated?: (err, win) => void
   packageManager: 'npm' | 'jspm',
   /**
    * Packages config as in `systemjs`.
    */
   packages: { [packageName: string]: SystemJSLoader.PackageConfig },
+  /**
+   * Scripts to load when creating the domture.
+   */
+  scripts: string[]
   /**
    * Folder for your source code.
    * It should be relative: `./some-folder`

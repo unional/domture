@@ -1,4 +1,5 @@
 import test from 'ava'
+import path = require('path')
 
 import { create } from './index'
 
@@ -68,4 +69,14 @@ test('use map', async t => {
   t.is(typeof foo, 'function')
   const foo2 = await domture.import('./index')
   t.is(foo, foo2)
+})
+
+test('preload script', async t => {
+  const domture = await create({
+    scripts: [
+      path.resolve('./node_modules/global-store/dist/global-store.es5.js')
+    ]
+  })
+
+  t.truthy(domture.window.GlobalStore)
 })

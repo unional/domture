@@ -6,6 +6,7 @@ export const defaultConfig: Config = {
   map: {},
   packageManager: 'npm',
   packages: {},
+  scripts: [],
   srcRoot: './src',
   writtenIn: 'es5'
 }

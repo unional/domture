@@ -2,27 +2,20 @@ import * as extend from 'deep-extend'
 import * as fileUrl from 'file-url'
 import { env, createVirtualConsole } from 'jsdom'
 
-import { defaultConfig, unpartial } from './config'
+import { unpartial } from './config'
 import { Domture, Config } from './interfaces'
 import { DomtureImpl } from './DomtureImpl'
 import { toSystemJSConfig } from './systemjsConfig'
 
-export function createTypeScript(srcRoot: string = '.') {
-  const config = { ...defaultConfig }
-  config.srcRoot = srcRoot
-  return create(config)
-}
-
 export function create(partialConfig?: Partial<Config>): Promise<Domture> {
   const config = unpartial(partialConfig)
   const sysConfig = toSystemJSConfig(config)
-  const jsdomConfig = {}
 
   // Add `console.debug` to NodeJS environment.
   // so that debug message can be written
   console.debug = console.debug || console.log
 
-  return setupJsDom(jsdomConfig)
+  return setupJsDom(config)
     .then((win) => {
       const systemjs = win.SystemJS
       systemjs.config(sysConfig)
@@ -31,7 +24,8 @@ export function create(partialConfig?: Partial<Config>): Promise<Domture> {
     })
 }
 
-function setupJsDom(jsdomConfig) {
+function setupJsDom(config) {
+  const { scripts, onCreated } = config
   return new Promise<any>((resolve, reject) => {
     const virtualConsole = createVirtualConsole().sendTo(console)
     const config = extend(
@@ -39,15 +33,25 @@ function setupJsDom(jsdomConfig) {
         html: '<br>',
         url: fileUrl(process.cwd()) + '/',
         virtualConsole,
-        scripts: []
+        scripts: scripts || []
       },
-      jsdomConfig,
       {
         done(err, win) {
-          if (err)
-            reject(err)
-          else
-            resolve(win)
+          if (onCreated) {
+            try {
+              onCreated(err, win)
+              resolve(win)
+            }
+            catch (e) {
+              reject(e)
+            }
+          }
+          else {
+            if (err)
+              reject(err)
+            else
+              resolve(win)
+          }
         }
       })
 
