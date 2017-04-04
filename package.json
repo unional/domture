@@ -61,6 +61,7 @@
     ]
   },
   "devDependencies": {
+    "@types/jsdom": "^2.0.30",
     "@types/node": "^7.0.12",
     "@types/systemjs": "^0.20.2",
     "@unional/logging": "^0.1.6",

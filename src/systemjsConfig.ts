@@ -65,11 +65,12 @@ const writtenIn = {
 }
 
 export function toSystemJSConfig(config: Config) {
+  const { systemjsConfig = {} } = config
   let sys: any = packageManagers[config.packageManager]()
 
   extend(sys, writtenIn[config.writtenIn](config.srcRoot))
-  extend(sys.packages, config.packages)
-  extend(sys.map, config.map)
+  extend(sys.packages, systemjsConfig.packages)
+  extend(sys.map, systemjsConfig.map)
 
   return sys
 }

@@ -48,9 +48,11 @@ test('load ts', async t => {
 test('fix missing main', async t => {
   const domture = await create({
     srcRoot: './fixtures/fix-main',
-    packages: {
-      'make-error': {
-        main: 'index'
+    systemjsConfig: {
+      packages: {
+        'make-error': {
+          main: 'index'
+        }
       }
     }
   })
@@ -61,8 +63,10 @@ test('fix missing main', async t => {
 test('use map', async t => {
   const domture = await create({
     srcRoot: './fixtures/cjs',
-    map: {
-      'xyz': './fixtures/cjs/index'
+    systemjsConfig: {
+      map: {
+        'xyz': './fixtures/cjs/index'
+      }
     }
   })
   const foo = await domture.import('xyz')
@@ -73,9 +77,11 @@ test('use map', async t => {
 
 test('preload script', async t => {
   const domture = await create({
-    scripts: [
-      path.resolve('./node_modules/global-store/dist/global-store.es5.js')
-    ]
+    jsdomConfig: {
+      scripts: [
+        path.resolve('./node_modules/global-store/dist/global-store.es5.js')
+      ]
+    }
   })
 
   t.truthy(domture.window.GlobalStore)
