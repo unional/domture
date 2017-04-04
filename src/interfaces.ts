@@ -1,6 +1,10 @@
 require('systemjs')
 import { Config as JsdomConfig } from 'jsdom'
 
+type SystemjsConfig = SystemJSLoader.Config
+export { JsdomConfig }
+export { SystemjsConfig }
+
 export interface Domture {
   /**
    * Window and any global namespaces.
@@ -23,5 +27,5 @@ export interface Config {
   srcRoot: string,
   writtenIn: 'es5' | 'ts',
   jsdomConfig?: JsdomConfig,
-  systemjsConfig?: SystemJSLoader.Config
+  systemjsConfig?: SystemjsConfig
 }
