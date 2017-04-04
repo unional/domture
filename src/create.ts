@@ -24,8 +24,8 @@ export function create(partialConfig?: Partial<Config>): Promise<Domture> {
     })
 }
 
-function setupJsDom(config) {
-  const { scripts, onCreated } = config
+function setupJsDom(config: Config) {
+  const { jsdomConfig = {} } = config
   return new Promise<any>((resolve, reject) => {
     const virtualConsole = createVirtualConsole().sendTo(console)
     const config = extend(
@@ -33,13 +33,14 @@ function setupJsDom(config) {
         html: '<br>',
         url: fileUrl(process.cwd()) + '/',
         virtualConsole,
-        scripts: scripts || []
+        scripts: []
       },
+      jsdomConfig,
       {
         done(err, win) {
-          if (onCreated) {
+          if (jsdomConfig.done) {
             try {
-              onCreated(err, win)
+              jsdomConfig.done(err, win)
               resolve(win)
             }
             catch (e) {
