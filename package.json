@@ -14,7 +14,7 @@
     "build-es5": "tsc -p tsconfig.es5.json",
     "clean": "rimraf dist/es5 dist/es2015",
     "dc": "npm run dependency-check",
-    "dependency-check": "dependency-check . --unused --no-dev -i plugin-typescript -i systemjs -i \"@types/systemjs\" && dependency-check . --missing --no-dev",
+    "dependency-check": "dependency-check . --unused --no-dev -i plugin-typescript -i systemjs -i @types/systemjs -i @types/jsdom && dependency-check . --missing --no-dev",
     "lint": "tslint \"src/**/*.ts\"",
     "postpublish": "git push",
     "preversion": "git pull && npm run verify",
