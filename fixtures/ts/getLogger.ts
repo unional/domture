@@ -1,3 +1,3 @@
-import { getLogger } from '@unional/logging'
+import { getLogger } from 'aurelia-logging'
 
 export { getLogger }
