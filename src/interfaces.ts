@@ -1,8 +1,6 @@
 require('systemjs')
-import { Config as JsdomConfig } from 'jsdom'
 
 type SystemjsConfig = SystemJSLoader.Config
-export { JsdomConfig }
 export { SystemjsConfig }
 
 export interface Domture {
@@ -26,6 +24,6 @@ export interface Config {
    */
   srcRoot: string,
   writtenIn: 'es5' | 'ts',
-  jsdomConfig?: JsdomConfig,
+  preloadScripts?: string[],
   systemjsConfig?: SystemjsConfig
 }
