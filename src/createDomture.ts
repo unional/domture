@@ -5,12 +5,11 @@ import { JSDOM } from 'jsdom'
 
 import { unpartial } from './config'
 import { Domture, Config } from './interfaces'
-import { DomtureImpl } from './DomtureImpl'
 import { toSystemJSConfig } from './systemjsConfig'
 
 const url = fileUrl(process.cwd()) + '/'
 
-export function create(partialConfig?: Partial<Config>): Promise<Domture> {
+export function createDomture(partialConfig?: Partial<Config>): Promise<Domture> {
   const config = unpartial(partialConfig)
   const sysConfig = toSystemJSConfig(config)
 
@@ -23,7 +22,7 @@ export function create(partialConfig?: Partial<Config>): Promise<Domture> {
   const systemjs = (window as any).SystemJS
   systemjs.config(sysConfig)
 
-  const domture = new DomtureImpl(window)
+  const domture = extendJSDOM(dom)
   if (config.preloadScripts) {
     return Promise.all(config.preloadScripts.map(s => {
       return domture.import(s)
@@ -42,5 +41,22 @@ function createJSDOM() {
 }
 
 function readSystemJSScript() {
-  return fs.readFileSync(require.resolve('systemjs/dist/system.js'), 'utf8')
+  return fs.readFileSync(require.resolve('systemjs'), 'utf8')
+}
+
+function extendJSDOM(dom: JSDOM): Domture {
+  const result = dom as any
+  result.systemjs = result.window.SystemJS
+
+  result.import = function (identifier: string) {
+    const id = isRelative(identifier) ?
+      identifier.replace('.', 'app') : identifier
+    return result.systemjs.import(id)
+  }
+
+  return result
+}
+
+function isRelative(identifier: string) {
+  return identifier.indexOf('.') === 0
 }
