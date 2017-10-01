@@ -23,7 +23,7 @@ export interface Config {
    * It should be relative: `./some-folder`
    */
   srcRoot: string,
-  writtenIn: 'es5' | 'ts',
+  transpiler: 'none' | 'typescript',
   preloadScripts?: string[],
   systemjsConfig?: SystemjsConfig
 }

@@ -5,7 +5,7 @@ import { Config } from './interfaces'
 export const defaultConfig: Config = {
   packageManager: 'npm',
   srcRoot: './src',
-  writtenIn: 'es5'
+  transpiler: 'none'
 }
 
 export function unpartial(config?: Partial<Config>): Config {

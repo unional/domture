@@ -25,8 +25,8 @@ const packageManagers = {
   }
 }
 
-const writtenIn = {
-  es5(srcRoot: string) {
+const transpilerBuilders = {
+  none(srcRoot: string) {
     return {
       map: {
         'app': srcRoot
@@ -38,7 +38,7 @@ const writtenIn = {
       }
     }
   },
-  ts(srcRoot: string) {
+  typescript(srcRoot: string) {
     return {
       map: {
         'app': srcRoot
@@ -68,7 +68,7 @@ export function toSystemJSConfig(config: Config) {
   const { systemjsConfig = {} } = config
   let sys: any = packageManagers[config.packageManager]()
 
-  extend(sys, writtenIn[config.writtenIn](config.srcRoot))
+  extend(sys, transpilerBuilders[config.transpiler](config.srcRoot))
   extend(sys.packages, systemjsConfig.packages)
   extend(sys.map, systemjsConfig.map)
 

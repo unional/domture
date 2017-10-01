@@ -19,7 +19,7 @@ test('import es6', async t => {
 })
 
 test('import relative with default', async t => {
-  const domture = await create({ writtenIn: 'ts' })
+  const domture = await create({ transpiler: 'typescript' })
 
   const config = await domture.import('./log')
   t.truthy(config)
@@ -36,7 +36,7 @@ test('import relative', async t => {
 test('load ts', async t => {
   const domture = await create({
     srcRoot: './fixtures/ts',
-    writtenIn: 'ts'
+    transpiler: 'typescript'
   })
   const m = await domture.import('./index')
   t.is(typeof m, 'object')
