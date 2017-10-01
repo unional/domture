@@ -1,11 +1,14 @@
-import * as extend from 'deep-extend'
-import * as fileUrl from 'file-url'
-import { env, createVirtualConsole } from 'jsdom'
+import fs = require('fs')
+import fileUrl = require('file-url')
+
+import { JSDOM } from 'jsdom'
 
 import { unpartial } from './config'
 import { Domture, Config } from './interfaces'
 import { DomtureImpl } from './DomtureImpl'
 import { toSystemJSConfig } from './systemjsConfig'
+
+const url = fileUrl(process.cwd()) + '/'
 
 export function create(partialConfig?: Partial<Config>): Promise<Domture> {
   const config = unpartial(partialConfig)
@@ -15,49 +18,29 @@ export function create(partialConfig?: Partial<Config>): Promise<Domture> {
   // so that debug message can be written
   console.debug = console.debug || console.log
 
-  return setupJsDom(config)
-    .then((win) => {
-      const systemjs = win.SystemJS
-      systemjs.config(sysConfig)
+  const dom = createJSDOM()
+  const { window } = dom
+  const systemjs = (window as any).SystemJS
+  systemjs.config(sysConfig)
 
-      return new DomtureImpl(win)
-    })
+  const domture = new DomtureImpl(window)
+  if (config.preloadScripts) {
+    return Promise.all(config.preloadScripts.map(s => {
+      return domture.import(s)
+    })).then(() => domture)
+  }
+  return Promise.resolve(domture)
 }
 
-function setupJsDom(config: Config) {
-  const { jsdomConfig = {} } = config
-  return new Promise<any>((resolve, reject) => {
-    const virtualConsole = createVirtualConsole().sendTo(console)
-    const config = extend(
-      {
-        html: '<br>',
-        url: fileUrl(process.cwd()) + '/',
-        virtualConsole,
-        scripts: []
-      },
-      jsdomConfig,
-      {
-        done(err, win) {
-          if (jsdomConfig.done) {
-            try {
-              jsdomConfig.done(err, win)
-              resolve(win)
-            }
-            catch (e) {
-              reject(e)
-            }
-          }
-          else {
-            if (err)
-              reject(err)
-            else
-              resolve(win)
-          }
-        }
-      })
+function createJSDOM() {
+  const systemJSScript = readSystemJSScript()
 
-    // `deep-extend` can't merge array, so need to push it here instead of declaring above.
-    config.scripts.push(require.resolve('systemjs/dist/system.js'))
-    env(config)
+  return new JSDOM(`<script>${systemJSScript}</script>`, {
+    url,
+    runScripts: 'dangerously'
   })
+}
+
+function readSystemJSScript() {
+  return fs.readFileSync(require.resolve('systemjs/dist/system.js'), 'utf8')
 }
