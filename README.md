@@ -1,12 +1,11 @@
 # domture
 
-[![Greenkeeper badge](https://badges.greenkeeper.io/unional/domture.svg)](https://greenkeeper.io/)
-
 [![unstable][unstable-image]][unstable-url]
 [![NPM version][npm-image]][npm-url]
 [![NPM downloads][downloads-image]][downloads-url]
 [![Build status][travis-image]][travis-url]
 [![Coverage Status][coveralls-image]][coveralls-url]
+[![Greenkeeper badge](https://badges.greenkeeper.io/unional/domture.svg)](https://greenkeeper.io/)
 
 Creates a `jsdom` environment and load packages installed from `npm` using `systemjs`.
 
