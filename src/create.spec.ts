@@ -77,11 +77,9 @@ test('use map', async t => {
 
 test('preload script', async t => {
   const domture = await create({
-    jsdomConfig: {
-      scripts: [
-        path.resolve('./node_modules/global-store/dist/global-store.es5.js')
-      ]
-    }
+    preloadScripts: [
+      path.resolve('./node_modules/global-store/dist/global-store.es5.js')
+    ]
   })
 
   t.truthy(domture.window.GlobalStore)
