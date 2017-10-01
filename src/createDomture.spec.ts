@@ -1,16 +1,16 @@
 import test from 'ava'
 import path = require('path')
 
-import { create } from './index'
+import { createDomture } from './index'
 
 test('import cjs', async t => {
-  const domture = await create()
+  const domture = await createDomture()
   const extend = await domture.import('deep-extend')
   t.is(typeof extend, 'function')
 })
 
 test('import es6', async t => {
-  const domture = await create()
+  const domture = await createDomture()
 
   const globalStore = await domture.import('global-store')
 
@@ -19,14 +19,14 @@ test('import es6', async t => {
 })
 
 test('import relative with default', async t => {
-  const domture = await create({ transpiler: 'typescript' })
+  const domture = await createDomture({ transpiler: 'typescript' })
 
   const config = await domture.import('./log')
   t.truthy(config)
 })
 
 test('import relative', async t => {
-  const domture = await create({
+  const domture = await createDomture({
     srcRoot: './fixtures/cjs'
   })
   const foo = await domture.import('./index')
@@ -34,7 +34,7 @@ test('import relative', async t => {
 })
 
 test('load ts', async t => {
-  const domture = await create({
+  const domture = await createDomture({
     srcRoot: './fixtures/ts',
     transpiler: 'typescript'
   })
@@ -46,7 +46,7 @@ test('load ts', async t => {
 })
 
 test('fix missing main', async t => {
-  const domture = await create({
+  const domture = await createDomture({
     srcRoot: './fixtures/fix-main',
     systemjsConfig: {
       packages: {
@@ -61,7 +61,7 @@ test('fix missing main', async t => {
 })
 
 test('use map', async t => {
-  const domture = await create({
+  const domture = await createDomture({
     srcRoot: './fixtures/cjs',
     systemjsConfig: {
       map: {
@@ -76,7 +76,7 @@ test('use map', async t => {
 })
 
 test('preload script', async t => {
-  const domture = await create({
+  const domture = await createDomture({
     preloadScripts: [
       path.resolve('./node_modules/global-store/dist/global-store.es5.js')
     ]
