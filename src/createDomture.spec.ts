@@ -45,6 +45,17 @@ test('load ts', async t => {
   t.is(getLogger.getLogger.name, 'getLogger')
 })
 
+test('with srcRoot should still load packages', async t => {
+  const domture = await createDomture({
+    srcRoot: './fixtures/ts',
+    transpiler: 'typescript'
+  })
+
+  const globalStore = await domture.import('global-store')
+  t.is(typeof globalStore, 'object')
+  t.is(globalStore.default.name, 'create')
+})
+
 test('fix missing main', async t => {
   const domture = await createDomture({
     srcRoot: './fixtures/fix-main',

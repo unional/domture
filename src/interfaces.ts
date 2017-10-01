@@ -18,7 +18,7 @@ export interface Domture extends JSDOM {
   import(identifier: string): Promise<any>
 }
 
-export interface Config {
+export interface DomtureConfig {
   packageManager: 'npm', // | 'jspm', no support for jspm yet.
   /**
    * Folder for your source code.

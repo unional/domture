@@ -1,13 +1,13 @@
 import extend = require('deep-extend')
 
-import { Config } from './interfaces'
+import { DomtureConfig } from './interfaces'
 
-export const defaultConfig: Config = {
+export const defaultConfig: DomtureConfig = {
   packageManager: 'npm',
   srcRoot: './src',
   transpiler: 'none'
 }
 
-export function unpartial(config?: Partial<Config>): Config {
+export function unpartial(config?: Partial<DomtureConfig>): DomtureConfig {
   return extend({}, defaultConfig, config)
 }

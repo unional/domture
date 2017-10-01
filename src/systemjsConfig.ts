@@ -1,6 +1,6 @@
 import extend = require('deep-extend')
 
-import { Config } from './interfaces'
+import { DomtureConfig } from './interfaces'
 
 const packageManagers = {
   npm() {
@@ -64,7 +64,7 @@ const transpilerBuilders = {
   }
 }
 
-export function toSystemJSConfig(config: Config) {
+export function toSystemJSConfig(config: DomtureConfig) {
   const { systemjsConfig = {} } = config
   let sys: any = packageManagers[config.packageManager]()
 

@@ -4,12 +4,12 @@ import fileUrl = require('file-url')
 import { JSDOM } from 'jsdom'
 
 import { unpartial } from './config'
-import { Domture, Config } from './interfaces'
+import { Domture, DomtureConfig } from './interfaces'
 import { toSystemJSConfig } from './systemjsConfig'
 
 const url = fileUrl(process.cwd()) + '/'
 
-export function createDomture(partialConfig?: Partial<Config>): Promise<Domture> {
+export function createDomture(partialConfig?: Partial<DomtureConfig>): Promise<Domture> {
   const config = unpartial(partialConfig)
   const sysConfig = toSystemJSConfig(config)
 
