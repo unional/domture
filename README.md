@@ -7,7 +7,12 @@
 [![Coverage Status][coveralls-image]][coveralls-url]
 [![Greenkeeper badge](https://badges.greenkeeper.io/unional/domture.svg)](https://greenkeeper.io/)
 
-Creates a `jsdom` environment and load packages installed from `npm` using `systemjs`.
+`domture` allows you to load packages and scripts directly on a `jsdom` instance for testing purpose.
+
+You can load `npm` packages as well as local files (by default under folder `./src`).
+
+Under the hood it uses [`systemjs`](https://github.com/systemjs/systemjs) to do its magic.
+You can configure `systemjs` directly however you want.
 
 ## Usage
 
@@ -28,7 +33,10 @@ test('basic usage', async t => {
 test('customize', async t => {
   const domture = await create({
     srcRoot: './lib',
-    writtenIn: 'ts', // import TypeScript source code directly,
+    // Preload some scripts ahead of time.
+    preloadScripts: ['a-package', './someCode.js', './index'],
+    // Able to load TypeScript code directly
+    transpiler: 'typescript',
     systemjsConfig: {
       packages: {
         // This is need for some packages due to https://github.com/systemjs/systemjs/issues/1603
@@ -36,8 +44,7 @@ test('customize', async t => {
           main: 'index'
         }
       }
-    },
-    jsdomConfig: { ... }
+    }
   })
 })
 ```
