@@ -18,7 +18,7 @@ test('import es6', async t => {
   t.is(globalStore.default.name, 'create')
 })
 
-test('import relative with default srcRoot (".")', async t => {
+test('import relative with default rootDir (".")', async t => {
   const domture = await createDomture({ transpiler: 'typescript' })
 
   const config = await domture.import('./src/log')
@@ -45,7 +45,7 @@ test('load ts', async t => {
   t.is(getLogger.getLogger.name, 'getLogger')
 })
 
-test('with srcRoot should still load packages', async t => {
+test('with rootDir should still load packages', async t => {
   const domture = await createDomture({
     rootDir: './fixtures/ts',
     transpiler: 'typescript'
@@ -94,4 +94,25 @@ test('preload script', async t => {
   })
 
   t.truthy(domture.window.GlobalStore)
+})
+
+test('import should fill global namespace', async t => {
+  const harness = await createDomture()
+  await harness.import('./node_modules/global-store/dist/global-store.es5.js')
+  const store = harness.window.GlobalStore
+
+  t.truthy(store)
+})
+
+test('preloadScripts should fill global namespace', async t => {
+  const harness = await createDomture(
+    {
+      rootDir: '.',
+      preloadScripts: [
+        './node_modules/global-store/dist/global-store.es5.js'
+      ]
+    })
+
+  const store = harness.window.GlobalStore
+  t.truthy(store)
 })

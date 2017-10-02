@@ -46,12 +46,14 @@ function readSystemJSScript() {
 
 function extendJSDOM(dom: JSDOM): Domture {
   const result = dom as any
+  const systemjs = result.window.SystemJS as SystemJSLoader.System
+
   result.systemjs = result.window.SystemJS
 
   result.import = function (identifier: string) {
     const id = isRelative(identifier) ?
       identifier.replace('.', 'app') : identifier
-    return result.systemjs.import(id)
+    return systemjs.import(id)
   }
 
   return result

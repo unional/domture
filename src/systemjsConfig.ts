@@ -26,10 +26,10 @@ const packageManagers = {
 }
 
 const transpilerBuilders = {
-  none(srcRoot: string) {
+  none(rootDir: string) {
     return {
       map: {
-        'app': srcRoot
+        'app': rootDir
       },
       packages: {
         'app': {
@@ -38,10 +38,10 @@ const transpilerBuilders = {
       }
     }
   },
-  typescript(srcRoot: string) {
+  typescript(rootDir: string) {
     return {
       map: {
-        'app': srcRoot
+        'app': rootDir
       },
       packages: {
         'app': {
