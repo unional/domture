@@ -1,16 +1,17 @@
 import fs = require('fs')
 import fileUrl = require('file-url')
-
 import { JSDOM } from 'jsdom'
+import { unpartial } from 'unpartial'
 
-import { unpartial } from './config'
-import { Domture, DomtureConfig } from './interfaces'
+
+import { DomtureConfig, defaultConfig } from './config'
+import { Domture } from './interfaces'
 import { toSystemJSConfig } from './systemjsConfig'
 
 const url = fileUrl(process.cwd()) + '/'
 
-export function createDomture(partialConfig?: Partial<DomtureConfig>): Promise<Domture> {
-  const config = unpartial(partialConfig)
+export function createDomture(givenConfig?: Partial<DomtureConfig>): Promise<Domture> {
+  const config = unpartial(givenConfig, defaultConfig)
   const sysConfig = toSystemJSConfig(config)
 
   // Add `console.debug` to NodeJS environment.
