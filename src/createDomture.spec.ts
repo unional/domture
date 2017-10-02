@@ -18,7 +18,7 @@ test('import es6', async t => {
   t.is(globalStore.default.name, 'create')
 })
 
-test('import relative with default', async t => {
+test('import relative with default srcRoot ("./src")', async t => {
   const domture = await createDomture({ transpiler: 'typescript' })
 
   const config = await domture.import('./log')

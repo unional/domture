@@ -1,7 +1,4 @@
-import { CookieJar, DOMWindow, VirtualConsole } from 'jsdom'
-
-// re-export
-export { CookieJar, DOMWindow, VirtualConsole }
+require('systemjs')
 
 export * from './interfaces'
 export * from './createDomture'

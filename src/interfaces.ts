@@ -1,15 +1,22 @@
-import { JSDOM, DOMWindow } from 'jsdom'
+import { JSDOM, DOMWindow, CookieJar, VirtualConsole } from 'jsdom'
 
-require('systemjs')
+// re-export
+export { CookieJar, DOMWindow, VirtualConsole }
 
-type SystemjsConfig = SystemJSLoader.Config
-export { SystemjsConfig }
+type SystemJSConfig = SystemJSLoader.Config
+type SystemJS = SystemJSLoader.System
+
+export { SystemJS, SystemJSConfig }
 
 export interface Domture extends JSDOM {
   /**
    * Window and any global namespaces.
    */
   window: DOMWindow & { [index: string]: any }
+  /**
+   * SystemJS instance.
+   */
+  systemjs: SystemJSLoader.System
   /**
    * Import module or file.
    * @param identifier Module name or case-insensitive namespace path (`MyPackage.some.thing`)
@@ -27,5 +34,5 @@ export interface DomtureConfig {
   srcRoot: string,
   transpiler: 'none' | 'typescript',
   preloadScripts?: string[],
-  systemjsConfig?: SystemjsConfig
+  systemjsConfig?: SystemJSConfig
 }
