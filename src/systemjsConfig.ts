@@ -1,6 +1,6 @@
 import extend = require('deep-extend')
 
-import { DomtureConfig } from './interfaces'
+import { DomtureConfig } from './config'
 
 const packageManagers = {
   npm() {
