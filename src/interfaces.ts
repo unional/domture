@@ -28,10 +28,9 @@ export interface Domture extends JSDOM {
 export interface DomtureConfig {
   packageManager: 'npm', // | 'jspm', no support for jspm yet.
   /**
-   * Folder for your source code.
-   * It should be relative: `./some-folder`
+   * Specifies the root directory of input files.
    */
-  srcRoot: string,
+  rootDir: string,
   transpiler: 'none' | 'typescript',
   preloadScripts?: string[],
   systemjsConfig?: SystemJSConfig

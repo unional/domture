@@ -4,7 +4,7 @@ import { DomtureConfig } from './interfaces'
 
 export const defaultConfig: DomtureConfig = {
   packageManager: 'npm',
-  srcRoot: './src',
+  rootDir: '.',
   transpiler: 'none'
 }
 

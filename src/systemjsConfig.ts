@@ -68,7 +68,7 @@ export function toSystemJSConfig(config: DomtureConfig) {
   const { systemjsConfig = {} } = config
   let sys: any = packageManagers[config.packageManager]()
 
-  extend(sys, transpilerBuilders[config.transpiler](config.srcRoot))
+  extend(sys, transpilerBuilders[config.transpiler](config.rootDir))
   extend(sys.packages, systemjsConfig.packages)
   extend(sys.map, systemjsConfig.map)
 
