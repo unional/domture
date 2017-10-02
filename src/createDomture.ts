@@ -1,16 +1,19 @@
 import fs = require('fs')
 import fileUrl = require('file-url')
-
 import { JSDOM } from 'jsdom'
+import { unpartial } from 'unpartial'
 
-import { unpartial } from './config'
-import { Domture, Config } from './interfaces'
+
+import { DomtureConfig, defaultConfig } from './config'
+import { Domture } from './interfaces'
+import { log } from './log'
+
 import { toSystemJSConfig } from './systemjsConfig'
 
 const url = fileUrl(process.cwd()) + '/'
 
-export function createDomture(partialConfig?: Partial<Config>): Promise<Domture> {
-  const config = unpartial(partialConfig)
+export function createDomture(givenConfig?: Partial<DomtureConfig>): Promise<Domture> {
+  const config = unpartial(givenConfig, defaultConfig)
   const sysConfig = toSystemJSConfig(config)
 
   // Add `console.debug` to NodeJS environment.
@@ -18,11 +21,9 @@ export function createDomture(partialConfig?: Partial<Config>): Promise<Domture>
   console.debug = console.debug || console.log
 
   const dom = createJSDOM()
-  const { window } = dom
-  const systemjs = (window as any).SystemJS
-  systemjs.config(sysConfig)
-
   const domture = extendJSDOM(dom)
+  domture.systemjs.config(sysConfig)
+
   if (config.preloadScripts) {
     return Promise.all(config.preloadScripts.map(s => {
       return domture.import(s)
@@ -46,15 +47,19 @@ function readSystemJSScript() {
 
 function extendJSDOM(dom: JSDOM): Domture {
   const result = dom as any
-  result.systemjs = result.window.SystemJS
+  const systemjs = result.systemjs = result.window.SystemJS as SystemJSLoader.System
 
   result.import = function (identifier: string) {
-    const id = isRelative(identifier) ?
-      identifier.replace('.', 'app') : identifier
-    return result.systemjs.import(id)
+    const moduleName = toSystemJSModuleName(identifier)
+    log.debug(`Import ${identifier} as ${moduleName}`)
+    return systemjs.import(moduleName)
   }
 
   return result
+}
+
+function toSystemJSModuleName(identifier) {
+  return isRelative(identifier) ? identifier.replace('.', 'app') : identifier
 }
 
 function isRelative(identifier: string) {

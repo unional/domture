@@ -18,16 +18,16 @@ test('import es6', async t => {
   t.is(globalStore.default.name, 'create')
 })
 
-test('import relative with default', async t => {
+test('import relative with default rootDir (".")', async t => {
   const domture = await createDomture({ transpiler: 'typescript' })
 
-  const config = await domture.import('./log')
+  const config = await domture.import('./src/log')
   t.truthy(config)
 })
 
 test('import relative', async t => {
   const domture = await createDomture({
-    srcRoot: './fixtures/cjs'
+    rootDir: './fixtures/cjs'
   })
   const foo = await domture.import('./index')
   t.is(typeof foo, 'function')
@@ -35,7 +35,7 @@ test('import relative', async t => {
 
 test('load ts', async t => {
   const domture = await createDomture({
-    srcRoot: './fixtures/ts',
+    rootDir: './fixtures/ts',
     transpiler: 'typescript'
   })
   const m = await domture.import('./index')
@@ -45,9 +45,20 @@ test('load ts', async t => {
   t.is(getLogger.getLogger.name, 'getLogger')
 })
 
+test('with rootDir should still load packages', async t => {
+  const domture = await createDomture({
+    rootDir: './fixtures/ts',
+    transpiler: 'typescript'
+  })
+
+  const globalStore = await domture.import('global-store')
+  t.is(typeof globalStore, 'object')
+  t.is(globalStore.default.name, 'create')
+})
+
 test('fix missing main', async t => {
   const domture = await createDomture({
-    srcRoot: './fixtures/fix-main',
+    rootDir: './fixtures/fix-main',
     systemjsConfig: {
       packages: {
         'make-error': {
@@ -62,7 +73,7 @@ test('fix missing main', async t => {
 
 test('use map', async t => {
   const domture = await createDomture({
-    srcRoot: './fixtures/cjs',
+    rootDir: './fixtures/cjs',
     systemjsConfig: {
       map: {
         'xyz': './fixtures/cjs/index'
@@ -83,4 +94,25 @@ test('preload script', async t => {
   })
 
   t.truthy(domture.window.GlobalStore)
+})
+
+test('import should fill global namespace', async t => {
+  const harness = await createDomture()
+  await harness.import('./node_modules/global-store/dist/global-store.es5.js')
+  const store = harness.window.GlobalStore
+
+  t.truthy(store)
+})
+
+test('preloadScripts should fill global namespace', async t => {
+  const harness = await createDomture(
+    {
+      rootDir: '.',
+      preloadScripts: [
+        './node_modules/global-store/dist/global-store.es5.js'
+      ]
+    })
+
+  const store = harness.window.GlobalStore
+  t.truthy(store)
 })

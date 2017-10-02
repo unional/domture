@@ -1,6 +1,6 @@
 import extend = require('deep-extend')
 
-import { Config } from './interfaces'
+import { DomtureConfig } from './config'
 
 const packageManagers = {
   npm() {
@@ -26,10 +26,10 @@ const packageManagers = {
 }
 
 const transpilerBuilders = {
-  none(srcRoot: string) {
+  none(rootDir: string) {
     return {
       map: {
-        'app': srcRoot
+        'app': rootDir
       },
       packages: {
         'app': {
@@ -38,10 +38,10 @@ const transpilerBuilders = {
       }
     }
   },
-  typescript(srcRoot: string) {
+  typescript(rootDir: string) {
     return {
       map: {
-        'app': srcRoot
+        'app': rootDir
       },
       packages: {
         'app': {
@@ -64,11 +64,11 @@ const transpilerBuilders = {
   }
 }
 
-export function toSystemJSConfig(config: Config) {
+export function toSystemJSConfig(config: DomtureConfig) {
   const { systemjsConfig = {} } = config
   let sys: any = packageManagers[config.packageManager]()
 
-  extend(sys, transpilerBuilders[config.transpiler](config.srcRoot))
+  extend(sys, transpilerBuilders[config.transpiler](config.rootDir))
   extend(sys.packages, systemjsConfig.packages)
   extend(sys.map, systemjsConfig.map)
 

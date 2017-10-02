@@ -1,13 +1,19 @@
-import extend = require('deep-extend')
+type SystemJSConfig = SystemJSLoader.Config
 
-import { Config } from './interfaces'
-
-export const defaultConfig: Config = {
-  packageManager: 'npm',
-  srcRoot: './src',
-  transpiler: 'none'
+export { SystemJSConfig }
+export interface DomtureConfig {
+  packageManager: 'npm', // | 'jspm', no support for jspm yet.
+  /**
+   * Specifies the root directory of input files.
+   */
+  rootDir: string,
+  transpiler: 'none' | 'typescript',
+  preloadScripts?: string[],
+  systemjsConfig?: SystemJSConfig
 }
 
-export function unpartial(config?: Partial<Config>): Config {
-  return extend({}, defaultConfig, config)
+export const defaultConfig: DomtureConfig = {
+  packageManager: 'npm',
+  rootDir: '.',
+  transpiler: 'none'
 }
