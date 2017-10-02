@@ -6,6 +6,8 @@ import { unpartial } from 'unpartial'
 
 import { DomtureConfig, defaultConfig } from './config'
 import { Domture } from './interfaces'
+import { log } from './log'
+
 import { toSystemJSConfig } from './systemjsConfig'
 
 const url = fileUrl(process.cwd()) + '/'
@@ -19,11 +21,9 @@ export function createDomture(givenConfig?: Partial<DomtureConfig>): Promise<Dom
   console.debug = console.debug || console.log
 
   const dom = createJSDOM()
-  const { window } = dom
-  const systemjs = (window as any).SystemJS
-  systemjs.config(sysConfig)
-
   const domture = extendJSDOM(dom)
+  domture.systemjs.config(sysConfig)
+
   if (config.preloadScripts) {
     return Promise.all(config.preloadScripts.map(s => {
       return domture.import(s)
@@ -47,17 +47,19 @@ function readSystemJSScript() {
 
 function extendJSDOM(dom: JSDOM): Domture {
   const result = dom as any
-  const systemjs = result.window.SystemJS as SystemJSLoader.System
-
-  result.systemjs = result.window.SystemJS
+  const systemjs = result.systemjs = result.window.SystemJS as SystemJSLoader.System
 
   result.import = function (identifier: string) {
-    const id = isRelative(identifier) ?
-      identifier.replace('.', 'app') : identifier
-    return systemjs.import(id)
+    const moduleName = toSystemJSModuleName(identifier)
+    log.debug(`Import ${identifier} as ${moduleName}`)
+    return systemjs.import(moduleName)
   }
 
   return result
+}
+
+function toSystemJSModuleName(identifier) {
+  return isRelative(identifier) ? identifier.replace('.', 'app') : identifier
 }
 
 function isRelative(identifier: string) {
