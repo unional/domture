@@ -84,6 +84,6 @@
     "jsdom": "^11.3.0",
     "plugin-typescript": "^7.1.0",
     "systemjs": "^0.20.19",
-    "unpartial": "^0.1.0"
+    "unpartial": "^0.2.1"
   }
 }

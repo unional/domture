@@ -13,7 +13,7 @@ import { toSystemJSConfig } from './systemjsConfig'
 const url = fileUrl(process.cwd()) + '/'
 
 export function createDomture(givenConfig?: Partial<DomtureConfig>): Promise<Domture> {
-  const config = unpartial(givenConfig, defaultConfig)
+  const config = unpartial(defaultConfig, givenConfig)
   const sysConfig = toSystemJSConfig(config)
 
   // Add `console.debug` to NodeJS environment.
