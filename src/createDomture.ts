@@ -12,7 +12,7 @@ import { toSystemJSConfig } from './systemjsConfig'
 
 const url = fileUrl(process.cwd()) + '/'
 
-export function createDomture(givenConfig?: Partial<DomtureConfig>): Promise<Domture> {
+export function createDomture(givenConfig: Partial<DomtureConfig> = {}): Promise<Domture> {
   const config = unpartial(defaultConfig, givenConfig)
   const sysConfig = toSystemJSConfig(config)
 
