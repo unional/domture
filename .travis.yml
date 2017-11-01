@@ -8,8 +8,6 @@ notifications:
 node_js:
   - "stable"
 before_install:
-# package-lock.json was introduced in npm@5
-- npm install -g npm@5
 - npm install -g greenkeeper-lockfile@1
 
 before_script: greenkeeper-lockfile-update
