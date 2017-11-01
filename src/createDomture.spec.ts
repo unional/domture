@@ -104,6 +104,22 @@ test('import should fill global namespace', async t => {
   t.truthy(store)
 })
 
+test('import global namespace script', async t => {
+  const harness = await createDomture({ transpiler: 'typescript' })
+  await harness.import('./fixtures/ts-global/MyCompany/component/TextBox')
+  const textBox = harness.window.MyCompany.component.TextBox
+  t.deepEqual(textBox, { a: 1 })
+})
+
+test(`preload global namespace script`, async t => {
+  const harness = await createDomture({
+    transpiler: 'typescript',
+    preloadScripts: ['./fixtures/ts-global/MyCompany/component/TextBox']
+  })
+  const textBox = harness.window.MyCompany.component.TextBox
+  t.deepEqual(textBox, { a: 1 })
+})
+
 test('preloadScripts should fill global namespace', async t => {
   const harness = await createDomture(
     {
