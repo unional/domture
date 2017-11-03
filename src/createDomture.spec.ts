@@ -1,5 +1,4 @@
 import test from 'ava'
-import path = require('path')
 
 import { createDomture } from './index'
 
@@ -31,29 +30,6 @@ test('import relative', async t => {
   })
   const foo = await domture.import('./index')
   t.is(typeof foo, 'function')
-})
-
-test('load ts', async t => {
-  const domture = await createDomture({
-    rootDir: './fixtures/ts',
-    transpiler: 'typescript'
-  })
-  const m = await domture.import('./index')
-  t.is(typeof m, 'object')
-
-  const getLogger = await domture.import('./getLogger')
-  t.is(getLogger.getLogger.name, 'getLogger')
-})
-
-test('with rootDir should still load packages', async t => {
-  const domture = await createDomture({
-    rootDir: './fixtures/ts',
-    transpiler: 'typescript'
-  })
-
-  const globalStore = await domture.import('global-store')
-  t.is(typeof globalStore, 'object')
-  t.is(globalStore.default.name, 'create')
 })
 
 test('fix missing main', async t => {
@@ -89,35 +65,42 @@ test('use map', async t => {
 test('preload script', async t => {
   const domture = await createDomture({
     preloadScripts: [
-      path.resolve('./node_modules/global-store/dist/global-store.es5.js')
+      require.resolve('global-store/dist/global-store.es5.js')
     ]
   })
 
-  t.truthy(domture.window.GlobalStore)
+  t.not(domture.window.GlobalStore, undefined)
 })
 
-test('import should fill global namespace', async t => {
+test('preload color-map script', async t => {
+  const domture = await createDomture({
+    preloadScripts: [
+      require.resolve('color-map/dist/color-map.es5.js')
+    ]
+  })
+  t.not(domture.window.ColorMap, undefined)
+})
+
+test('import color-map still works', async t => {
+  const domture = await createDomture()
+
+  const colorMap = await domture.import('color-map')
+
+  t.not(colorMap, undefined)
+})
+
+test('import global-store should fill global namespace', async t => {
   const harness = await createDomture()
   await harness.import('./node_modules/global-store/dist/global-store.es5.js')
-  const store = harness.window.GlobalStore
 
-  t.truthy(store)
+  t.not(harness.window.GlobalStore, undefined)
 })
 
-test('import global namespace script', async t => {
-  const harness = await createDomture({ transpiler: 'typescript' })
-  await harness.import('./fixtures/ts-global/MyCompany/component/TextBox')
-  const textBox = harness.window.MyCompany.component.TextBox
-  t.deepEqual(textBox, { a: 1 })
-})
+test('import `color-map` should fill global namespace', async t => {
+  const harness = await createDomture()
+  await harness.import(require.resolve('color-map/dist/color-map.es5.js'))
 
-test(`preload global namespace script`, async t => {
-  const harness = await createDomture({
-    transpiler: 'typescript',
-    preloadScripts: ['./fixtures/ts-global/MyCompany/component/TextBox']
-  })
-  const textBox = harness.window.MyCompany.component.TextBox
-  t.deepEqual(textBox, { a: 1 })
+  t.not(harness.window.ColorMap, undefined)
 })
 
 test('preloadScripts should fill global namespace', async t => {
@@ -129,6 +112,5 @@ test('preloadScripts should fill global namespace', async t => {
       ]
     })
 
-  const store = harness.window.GlobalStore
-  t.truthy(store)
+  t.not(harness.window.GlobalStore, undefined)
 })
