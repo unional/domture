@@ -1,3 +1,4 @@
+import { ConstructorOptions } from 'jsdom'
 type SystemJSConfig = SystemJSLoader.Config
 
 export { SystemJSConfig }
@@ -10,7 +11,8 @@ export interface DomtureConfig {
   rootDir: string,
   transpiler: 'none' | 'typescript',
   preloadScripts?: string[],
-  systemjsConfig?: SystemJSConfig
+  systemjsConfig?: SystemJSConfig,
+  jsdomConstructorOptions?: ConstructorOptions
 }
 
 export const defaultConfig: DomtureConfig = {

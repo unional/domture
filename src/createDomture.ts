@@ -1,6 +1,6 @@
 import fs = require('fs')
 import fileUrl = require('file-url')
-import { JSDOM } from 'jsdom'
+import { JSDOM, ConstructorOptions } from 'jsdom'
 import { unpartial } from 'unpartial'
 
 
@@ -20,7 +20,7 @@ export function createDomture(givenConfig: Partial<DomtureConfig> = {}): Promise
   // so that debug message can be written
   console.debug = console.debug || console.log
 
-  const dom = createJSDOM()
+  const dom = createJSDOM(config.jsdomConstructorOptions)
   const domture = extendJSDOM(dom)
   domture.systemjs.config(sysConfig)
 
@@ -32,13 +32,13 @@ export function createDomture(givenConfig: Partial<DomtureConfig> = {}): Promise
   return Promise.resolve(domture)
 }
 
-function createJSDOM() {
+function createJSDOM(givenOptions: Partial<ConstructorOptions> = {}) {
   const systemJSScript = readSystemJSScript()
-
-  return new JSDOM(`<script>${systemJSScript}</script>`, {
+  const options = unpartial<ConstructorOptions>({
     url,
     runScripts: 'dangerously'
-  })
+  }, givenOptions)
+  return new JSDOM(`<script>${systemJSScript}</script>`, options)
 }
 
 function readSystemJSScript() {

@@ -18,10 +18,10 @@ You can configure `systemjs` directly however you want.
 
 ```ts
 import test from 'ava' // or your favorite test runner
-import { create } from 'domture'
+import { createDomture } from 'domture'
 
 test('basic usage', async t => {
-  const domture = await create()
+  const domture = await createDomture()
 
   // load package `foo`
   const foo = await domture.import('foo')
@@ -31,8 +31,8 @@ test('basic usage', async t => {
 })
 
 test('customize', async t => {
-  const domture = await create({
-    srcRoot: './lib',
+  const domture = await createDomture({
+    rootDir: './lib',
     // Preload some scripts ahead of time.
     preloadScripts: ['a-package', './someCode.js', './index'],
     // Able to load TypeScript code directly

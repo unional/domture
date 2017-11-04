@@ -114,3 +114,14 @@ test('preloadScripts should fill global namespace', async t => {
 
   t.not(harness.window.GlobalStore, undefined)
 })
+
+test(`using jsdom constructor options`, async t => {
+  t.plan(1)
+  await createDomture({
+    jsdomConstructorOptions: {
+      beforeParse(window) {
+        t.not(window, undefined)
+      }
+    }
+  })
+})
