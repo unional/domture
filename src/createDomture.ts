@@ -34,10 +34,10 @@ export function createDomture(givenConfig: Partial<DomtureConfig> = {}): Promise
 
 function createJSDOM(givenOptions: Partial<ConstructorOptions> = {}) {
   const systemJSScript = readSystemJSScript()
-  const options = unpartial<ConstructorOptions>({
+  const options = unpartial<ConstructorOptions>(givenOptions, {
     url,
     runScripts: 'dangerously'
-  }, givenOptions)
+  })
   return new JSDOM(`<script>${systemJSScript}</script>`, options)
 }
 

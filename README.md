@@ -37,6 +37,9 @@ test('customize', async t => {
     preloadScripts: ['a-package', './someCode.js', './index'],
     // Able to load TypeScript code directly
     transpiler: 'typescript',
+    // Need to do `./index.ts` or `./index.js`.
+    // Useful when you need to load both types.
+    explicitExtension: true,
     systemjsConfig: {
       packages: {
         // This is need for some packages due to https://github.com/systemjs/systemjs/issues/1603
@@ -44,7 +47,11 @@ test('customize', async t => {
           main: 'index'
         }
       }
-    }
+    },
+    // configure jsdom.
+    // Can't set `url` and `runScripts`.
+    // They are used internally.
+    jsdomConstructorOptions: { ... }
   })
 })
 ```
