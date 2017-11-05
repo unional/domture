@@ -1,0 +1,1 @@
+boo = { boo: foo.a }

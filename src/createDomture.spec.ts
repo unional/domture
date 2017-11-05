@@ -111,8 +111,20 @@ test('preloadScripts should fill global namespace', async t => {
         './node_modules/global-store/dist/global-store.es5.js'
       ]
     })
-
   t.not(harness.window.GlobalStore, undefined)
+})
+
+test('preloadScripts should run sequentially', async t => {
+  const harness = await createDomture(
+    {
+      rootDir: './fixtures/global-deps',
+      preloadScripts: [
+        './foo.js',
+        './boo.js'
+      ]
+    })
+
+  t.not(harness.window.boo, undefined)
 })
 
 test(`using jsdom constructor options`, async t => {
