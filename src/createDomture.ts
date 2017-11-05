@@ -34,10 +34,10 @@ export function createDomture(givenConfig: Partial<DomtureConfig> = {}): Promise
 
 function createJSDOM(givenOptions: Partial<ConstructorOptions> = {}) {
   const systemJSScript = readSystemJSScript()
-  const options = unpartial<ConstructorOptions>({
+  const options = unpartial<ConstructorOptions>(givenOptions, {
     url,
     runScripts: 'dangerously'
-  }, givenOptions)
+  })
   return new JSDOM(`<script>${systemJSScript}</script>`, options)
 }
 
@@ -58,7 +58,7 @@ function extendJSDOM(dom: JSDOM): Domture {
   return result
 }
 
-function toSystemJSModuleName(identifier) {
+function toSystemJSModuleName(identifier: string) {
   return isRelative(identifier) ? identifier.replace('.', 'app') : identifier
 }
 

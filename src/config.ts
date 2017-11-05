@@ -10,6 +10,11 @@ export interface DomtureConfig {
    */
   rootDir: string,
   transpiler: 'none' | 'typescript',
+  /**
+   * When true, require to specify extension explicitly.
+   * This is useful when using `typescript` while also need to load javascript.
+   */
+  explicitExtension?: boolean,
   preloadScripts?: string[],
   systemjsConfig?: SystemJSConfig,
   jsdomConstructorOptions?: ConstructorOptions

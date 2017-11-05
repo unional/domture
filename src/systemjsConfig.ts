@@ -71,6 +71,8 @@ export function toSystemJSConfig(config: DomtureConfig) {
   extend(sys, transpilerBuilders[config.transpiler](config.rootDir))
   extend(sys.packages, systemjsConfig.packages)
   extend(sys.map, systemjsConfig.map)
+  if (config.explicitExtension)
+    sys.packages.app.defaultExtension = ''
 
   return sys
 }

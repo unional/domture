@@ -39,3 +39,16 @@ test(`preload global namespace script`, async t => {
   const textBox = harness.window.MyCompany.component.TextBox
   t.deepEqual(textBox, { a: 1 })
 })
+
+test('load ts and js', async t => {
+  const domture = await createDomture({
+    rootDir: './fixtures/ts',
+    transpiler: 'typescript',
+    explicitExtension: true
+  })
+  const foo = await domture.import('./foo.ts')
+  t.is(foo.foo(), 'foo')
+
+  const boo = await domture.import('./boo.js')
+  t.is(boo.boo(), 'boo')
+})
