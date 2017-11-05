@@ -47,7 +47,7 @@ test('load ts and js', async t => {
     explicitExtension: true
   })
   const foo = await domture.import('./foo.ts')
-  t.is(foo.foo(), 'foo')
+  t.deepEqual(foo.foo(), { value: 'foo' })
 
   const boo = await domture.import('./boo.js')
   t.is(boo.boo(), 'boo')
