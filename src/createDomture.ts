@@ -46,9 +46,14 @@ function extendJSDOM(dom: JSDOM): Domture {
   const systemjs = result.systemjs = result.window.SystemJS as SystemJSLoader.System
 
   result.import = function (identifier: string) {
+    const startTick = process.hrtime()
     const moduleName = toSystemJSModuleName(identifier)
     log.debug(`Import ${identifier} as ${moduleName}`)
-    return systemjs.import(moduleName)
+    return systemjs.import(moduleName).then(m => {
+      const [second, nanoSecond] = process.hrtime(startTick)
+      log.debug(`Import completed for ${identifier} (${second * 1000 + nanoSecond / 1e6} ms)`)
+      return m
+    })
   }
 
   return result
