@@ -58,7 +58,7 @@ function extendJSDOM(dom: JSDOM): Domture {
   return result
 }
 
-function toSystemJSModuleName(identifier) {
+function toSystemJSModuleName(identifier: string) {
   return isRelative(identifier) ? identifier.replace('.', 'app') : identifier
 }
 
