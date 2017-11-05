@@ -16,10 +16,6 @@ export function createDomture(givenConfig: Partial<DomtureConfig> = {}): Promise
   const config = unpartial(defaultConfig, givenConfig)
   const sysConfig = toSystemJSConfig(config)
 
-  // Add `console.debug` to NodeJS environment.
-  // so that debug message can be written
-  console.debug = console.debug || console.log
-
   const dom = createJSDOM(config.jsdomConstructorOptions)
   const domture = extendJSDOM(dom)
   domture.systemjs.config(sysConfig)

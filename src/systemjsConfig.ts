@@ -13,6 +13,7 @@ const packageManagers = {
     }
   },
   jspm() {
+    // istanbul ignore next
     return {
       browserConfig: {
         baseURL: '/'
