@@ -31,8 +31,11 @@ test('import global script', async t => {
   t.deepEqual(textBox, { a: 1 })
 })
 
+<<<<<<< eb2d8ef892dd658bdb5b98e93d729a5296ef0348
 <<<<<<< 01730bc4648eeb43b6567ec2ce7d1de6aecc6388
 =======
+=======
+>>>>>>> Add failing test
 test('import global script', async t => {
   const harness = await createDomture({ transpiler: 'typescript' })
   await harness.import('./fixtures/ts-global/MyCompany/component/TextBox')
