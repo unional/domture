@@ -21,4 +21,8 @@ export interface Domture extends JSDOM {
    * or relative path (`./js/pan/base/grid`)
    */
   import(identifier: string): Promise<any>
+  /**
+   * Get coverage result when `collectCoverage` is true.
+   */
+  // getCoverage(): any
 }

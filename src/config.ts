@@ -16,6 +16,7 @@ export interface DomtureConfig {
    */
   explicitExtension?: boolean,
   preloadScripts?: string[],
+  // collectCoverage?: boolean,
   systemjsConfig?: SystemJSConfig,
   jsdomConstructorOptions?: ConstructorOptions
 }

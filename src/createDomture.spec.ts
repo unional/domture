@@ -125,3 +125,14 @@ test(`using jsdom constructor options`, async t => {
     }
   })
 })
+
+test.skip('collectCoverage', async t => {
+  const domture = await createDomture({
+    rootDir: './fixtures/cjs'
+    // collectCoverage: true
+  })
+  const foo = await domture.import('./index')
+  t.is(foo(), 'foo')
+  // const coverage = domture.getCoverage()
+  // console.log(coverage)
+})
