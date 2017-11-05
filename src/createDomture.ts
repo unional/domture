@@ -25,9 +25,9 @@ export function createDomture(givenConfig: Partial<DomtureConfig> = {}): Promise
   domture.systemjs.config(sysConfig)
 
   if (config.preloadScripts) {
-    return Promise.all(config.preloadScripts.map(s => {
-      return domture.import(s)
-    })).then(() => domture)
+    return config.preloadScripts.reduce((prev, script) => {
+      return prev.then(() => domture.import(script))
+    }, Promise.resolve()).then(() => domture)
   }
   return Promise.resolve(domture)
 }
