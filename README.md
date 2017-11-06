@@ -9,7 +9,7 @@
 
 `domture` allows you to load packages and scripts directly on a `jsdom` instance for testing purpose.
 
-You can load `npm` packages as well as local files (by default under folder `./src`).
+You can load `npm` packages as well as local files (by default relative to current folder `.`).
 
 Under the hood it uses [`systemjs`](https://github.com/systemjs/systemjs) to do its magic.
 You can configure `systemjs` directly however you want.
@@ -26,12 +26,13 @@ test('basic usage', async t => {
   // load package `foo`
   const foo = await domture.import('foo')
 
-  // load relative (by default relative to `./src`)
+  // load by relative path
   const config = await domture.import('./config')
 })
 
 test('customize', async t => {
   const domture = await createDomture({
+    // Where to resolve relative path.
     rootDir: './lib',
     // Preload some scripts ahead of time.
     preloadScripts: ['a-package', './someCode.js', './index'],
