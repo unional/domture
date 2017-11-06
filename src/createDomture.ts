@@ -20,9 +20,7 @@ export function createDomture(givenConfig: Partial<DomtureConfig> = {}): Promise
   configureSystemJS(domture, config)
 
   if (config.preloadScripts) {
-    return config.preloadScripts.reduce((prev, script) => {
-      return prev.then(() => domture.loadScript(script))
-    }, Promise.resolve()).then(() => domture)
+    config.preloadScripts.forEach(s => domture['loadScriptSyncInternal'](true, config.rootDir, s))
   }
   return Promise.resolve(domture)
 }
@@ -64,14 +62,18 @@ function extendJSDOM(dom: JSDOM, config: DomtureConfig): Domture {
       })
   }
   result.loadScriptSync = function (this: Domture, identifier: string) {
+    this['loadScriptSyncInternal'](config.explicitExtension, config.rootDir, identifier)
+  }
+
+  result.loadScriptSyncInternal = function (this: Domture, explicitExtension: boolean | undefined, rootDir: string, identifier: string) {
     const scriptEL = this.window.document.createElement('script')
-    scriptEL.textContent = loadScriptContentSync(identifier)
+    scriptEL.textContent = loadScriptContentSync(explicitExtension, rootDir, identifier)
     this.window.document.head.appendChild(scriptEL)
   }
   return result
 
   function loadScriptContent(identifier: string) {
-    const scriptPath = resolveScriptPath(identifier)
+    const scriptPath = resolveScriptPath(config.explicitExtension || false, config.rootDir, identifier)
     return new Promise<string>((a, r) => {
       fs.readFile(scriptPath, { encoding: 'utf8' }, (err, data) => {
         if (err)
@@ -81,17 +83,14 @@ function extendJSDOM(dom: JSDOM, config: DomtureConfig): Domture {
     })
   }
 
-  function loadScriptContentSync(identifier: string) {
-    const scriptPath = resolveScriptPath(identifier)
+  function loadScriptContentSync(explicitExtension: boolean | undefined, rootDir: string, identifier: string) {
+    const scriptPath = resolveScriptPath(explicitExtension, rootDir, identifier)
     return fs.readFileSync(scriptPath, 'utf8')
   }
 
-  function resolveScriptPath(identifier: string) {
-    let scriptPath = path.resolve(config.rootDir, identifier)
-    if (config.transpiler === 'typescript' && scriptPath.slice(-3) !== '.ts')
-      scriptPath += '.ts'
-
-    if (config.transpiler !== 'typescript' && scriptPath.slice(-3) !== '.js')
+  function resolveScriptPath(explicitExtension: boolean | undefined, rootDir: string, identifier: string) {
+    let scriptPath = path.resolve(rootDir, identifier)
+    if (!explicitExtension && scriptPath.slice(-3) !== '.js')
       scriptPath += '.js'
     return scriptPath
   }
