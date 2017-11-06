@@ -125,6 +125,7 @@ test('preloadScripts should run sequentially', async t => {
     })
 
   t.not(harness.window.boo, undefined)
+  t.is(harness.window.boo.boo, 1)
 })
 
 test(`using jsdom constructor options`, async t => {
@@ -136,4 +137,78 @@ test(`using jsdom constructor options`, async t => {
       }
     }
   })
+})
+
+test(`loadScript() with relative path`, async t => {
+  const domture = await createDomture({
+    rootDir: './fixtures/global-deps'
+  })
+  await domture.loadScript('./foo')
+
+  t.is(domture.window.foo.a, 1)
+})
+
+test(`loadScript() with relative path with extension`, async t => {
+  const domture = await createDomture({
+    rootDir: './fixtures/global-deps'
+  })
+  await domture.loadScript('./foo.js')
+
+  t.is(domture.window.foo.a, 1)
+})
+
+test(`loadScript() with absolute path`, async t => {
+  const domture = await createDomture({
+    rootDir: './fixtures/global-deps'
+  })
+
+  await domture.loadScript(require.resolve('color-map/dist/color-map.es5.js'))
+
+  t.not(domture.window.ColorMap, undefined)
+})
+
+test(`loadScript() with invalid path`, async t => {
+  const domture = await createDomture({
+    rootDir: './fixtures/global-deps'
+  })
+
+  const err = await t.throws(domture.loadScript('./a.js'))
+  t.is(err.code, 'ENOENT')
+})
+
+test(`loadScriptSync() with relative path`, async t => {
+  const domture = await createDomture({
+    rootDir: './fixtures/global-deps'
+  })
+  domture.loadScriptSync('./foo')
+
+  t.is(domture.window.foo.a, 1)
+})
+
+test(`loadScriptSync() with relative path with extension`, async t => {
+  const domture = await createDomture({
+    rootDir: './fixtures/global-deps'
+  })
+  domture.loadScriptSync('./foo.js')
+
+  t.is(domture.window.foo.a, 1)
+})
+
+test(`loadScriptSync() with absolute path`, async t => {
+  const domture = await createDomture({
+    rootDir: './fixtures/global-deps'
+  })
+
+  domture.loadScriptSync(require.resolve('color-map/dist/color-map.es5.js'))
+
+  t.not(domture.window.ColorMap, undefined)
+})
+
+test(`loadScriptSync() with invalid path`, async t => {
+  const domture = await createDomture({
+    rootDir: './fixtures/global-deps'
+  })
+
+  const err = t.throws(() => domture.loadScriptSync('./a.js'))
+  t.is(err.code, 'ENOENT')
 })
