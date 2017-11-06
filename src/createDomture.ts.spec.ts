@@ -31,15 +31,6 @@ test('import global namespace script', async t => {
   t.deepEqual(textBox, { a: 1 })
 })
 
-test(`preload global namespace script`, async t => {
-  const harness = await createDomture({
-    transpiler: 'typescript',
-    preloadScripts: ['./fixtures/ts-global/MyCompany/component/TextBox']
-  })
-  const textBox = harness.window.MyCompany.component.TextBox
-  t.deepEqual(textBox, { a: 1 })
-})
-
 test('load ts and js', async t => {
   const domture = await createDomture({
     rootDir: './fixtures/ts',
@@ -51,4 +42,27 @@ test('load ts and js', async t => {
 
   const boo = await domture.import('./boo.js')
   t.is(boo.boo(), 'boo')
+})
+
+test('preload scripts with js extension', async t => {
+  const domture = await createDomture({
+    rootDir: './fixtures/ts',
+    transpiler: 'typescript',
+    preloadScripts: [
+      require.resolve('color-map/dist/color-map.es5.js')
+    ]
+  })
+  t.not(domture.window.ColorMap, undefined)
+})
+
+test('preload scripts with js extension and explicitExtension true', async t => {
+  const domture = await createDomture({
+    rootDir: './fixtures/ts',
+    transpiler: 'typescript',
+    explicitExtension: true,
+    preloadScripts: [
+      require.resolve('color-map/dist/color-map.es5.js')
+    ]
+  })
+  t.not(domture.window.ColorMap, undefined)
 })

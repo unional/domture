@@ -2,6 +2,9 @@ import { ConstructorOptions } from 'jsdom'
 type SystemJSConfig = SystemJSLoader.Config
 
 export { SystemJSConfig }
+
+export type Transpiler = 'none' | 'typescript'
+
 export interface DomtureConfig {
   packageManager: 'npm', // | 'jspm', no support for jspm yet.
   /**
@@ -9,7 +12,7 @@ export interface DomtureConfig {
    * This should be a relative path like `./src`
    */
   rootDir: string,
-  transpiler: 'none' | 'typescript',
+  transpiler: Transpiler,
   /**
    * When true, require to specify extension explicitly.
    * This is useful when using `typescript` while also need to load javascript.
