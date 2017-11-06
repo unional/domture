@@ -20,12 +20,9 @@ export function createDomture(givenConfig: Partial<DomtureConfig> = {}): Promise
   configureSystemJS(domture, config)
 
   if (config.preloadScripts) {
-    config.preloadScripts.forEach(s => {
-      domture.loadScript(s)
-    })
-    // return config.preloadScripts.reduce((prev, script) => {
-    //   return prev.then(() => domture.import(script))
-    // }, Promise.resolve()).then(() => domture)
+    return config.preloadScripts.reduce((prev, script) => {
+      return prev.then(() => domture.loadScript(script))
+    }, Promise.resolve()).then(() => domture)
   }
   return Promise.resolve(domture)
 }
@@ -59,21 +56,45 @@ function extendJSDOM(dom: JSDOM, config: DomtureConfig): Domture {
   }
 
   result.loadScript = function (this: Domture, identifier: string) {
+    return loadScriptContent(identifier)
+      .then(content => {
+        const scriptEL = this.window.document.createElement('script')
+        scriptEL.textContent = content
+        this.window.document.head.appendChild(scriptEL)
+      })
+  }
+  result.loadScriptSync = function (this: Domture, identifier: string) {
     const scriptEL = this.window.document.createElement('script')
-    scriptEL.textContent = loadScriptContent(identifier)
+    scriptEL.textContent = loadScriptContentSync(identifier)
     this.window.document.head.appendChild(scriptEL)
   }
+  return result
+
   function loadScriptContent(identifier: string) {
+    const scriptPath = resolveScriptPath(identifier)
+    return new Promise<string>((a, r) => {
+      fs.readFile(scriptPath, { encoding: 'utf8' }, (err, data) => {
+        if (err)
+          r(err)
+        a(data)
+      })
+    })
+  }
+
+  function loadScriptContentSync(identifier: string) {
+    const scriptPath = resolveScriptPath(identifier)
+    return fs.readFileSync(scriptPath, 'utf8')
+  }
+
+  function resolveScriptPath(identifier: string) {
     let scriptPath = path.resolve(config.rootDir, identifier)
-    log.debug(identifier, scriptPath)
     if (config.transpiler === 'typescript' && scriptPath.slice(-3) !== '.ts')
       scriptPath += '.ts'
 
     if (config.transpiler !== 'typescript' && scriptPath.slice(-3) !== '.js')
       scriptPath += '.js'
-    return fs.readFileSync(scriptPath, 'utf8')
+    return scriptPath
   }
-  return result
 }
 
 function configureSystemJS(domture, config) {

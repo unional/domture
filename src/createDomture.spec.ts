@@ -143,7 +143,7 @@ test(`loadScript() with relative path`, async t => {
   const domture = await createDomture({
     rootDir: './fixtures/global-deps'
   })
-  domture.loadScript('./foo')
+  await domture.loadScript('./foo')
 
   t.is(domture.window.foo.a, 1)
 })
@@ -152,7 +152,7 @@ test(`loadScript() with relative path with extension`, async t => {
   const domture = await createDomture({
     rootDir: './fixtures/global-deps'
   })
-  domture.loadScript('./foo.js')
+  await domture.loadScript('./foo.js')
 
   t.is(domture.window.foo.a, 1)
 })
@@ -162,7 +162,35 @@ test(`loadScript() with absolute path`, async t => {
     rootDir: './fixtures/global-deps'
   })
 
-  domture.loadScript(require.resolve('color-map/dist/color-map.es5.js'))
+  await domture.loadScript(require.resolve('color-map/dist/color-map.es5.js'))
+
+  t.not(domture.window.ColorMap, undefined)
+})
+
+test(`loadScriptSycn() with relative path`, async t => {
+  const domture = await createDomture({
+    rootDir: './fixtures/global-deps'
+  })
+  domture.loadScriptSync('./foo')
+
+  t.is(domture.window.foo.a, 1)
+})
+
+test(`loadScriptSync() with relative path with extension`, async t => {
+  const domture = await createDomture({
+    rootDir: './fixtures/global-deps'
+  })
+  domture.loadScriptSync('./foo.js')
+
+  t.is(domture.window.foo.a, 1)
+})
+
+test(`loadScriptSync() with absolute path`, async t => {
+  const domture = await createDomture({
+    rootDir: './fixtures/global-deps'
+  })
+
+  domture.loadScriptSync(require.resolve('color-map/dist/color-map.es5.js'))
 
   t.not(domture.window.ColorMap, undefined)
 })

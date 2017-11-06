@@ -29,5 +29,10 @@ export interface Domture extends JSDOM {
    * Load a script through script tag.
    * (so obviously, it can't be typescript)
    */
-  loadScript(identifier: string)
+  loadScript(identifier: string): Promise<void>
+  /**
+   * Load a script through script tag.
+   * (so obviously, it can't be typescript)
+   */
+  loadScriptSync(identifier: string): void
 }
