@@ -3,7 +3,6 @@ import fileUrl = require('file-url')
 import { JSDOM, ConstructorOptions } from 'jsdom'
 import { unpartial } from 'unpartial'
 
-
 import { DomtureConfig, defaultConfig } from './config'
 import { Domture } from './interfaces'
 import { log } from './log'
@@ -14,11 +13,11 @@ const url = fileUrl(process.cwd()) + '/'
 
 export function createDomture(givenConfig: Partial<DomtureConfig> = {}): Promise<Domture> {
   const config = unpartial(defaultConfig, givenConfig)
-  const sysConfig = toSystemJSConfig(config)
 
   const dom = createJSDOM(config.jsdomConstructorOptions)
   const domture = extendJSDOM(dom)
-  domture.systemjs.config(sysConfig)
+
+  configureSystemJS(domture, config)
 
   if (config.preloadScripts) {
     return config.preloadScripts.reduce((prev, script) => {
@@ -48,15 +47,21 @@ function extendJSDOM(dom: JSDOM): Domture {
   result.import = function (identifier: string) {
     const startTick = process.hrtime()
     const moduleName = toSystemJSModuleName(identifier)
-    log.debug(`Import ${identifier} as ${moduleName}`)
+    log.onDebug(log => log(`Import ${identifier} as ${moduleName}`))
     return systemjs.import(moduleName).then(m => {
       const [second, nanoSecond] = process.hrtime(startTick)
-      log.debug(`Import completed for ${identifier} (${second * 1000 + nanoSecond / 1e6} ms)`)
+      log.onDebug(log => log(`Import completed for ${identifier} (${second * 1000 + nanoSecond / 1e6} ms)`))
       return m
     })
   }
 
   return result
+}
+
+function configureSystemJS(domture, config) {
+  const sysConfig = toSystemJSConfig(config)
+  log.onDebug(log => log('SystemJS configuration:', JSON.stringify(sysConfig)))
+  domture.systemjs.config(sysConfig)
 }
 
 function toSystemJSModuleName(identifier: string) {

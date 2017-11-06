@@ -1,3 +1,3 @@
-import { getLogger, Logger } from 'aurelia-logging'
+import { getLogger, Logger } from '@unional/logging'
 
 export const log: Logger = getLogger('domture')
