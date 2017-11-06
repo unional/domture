@@ -167,7 +167,15 @@ test(`loadScript() with absolute path`, async t => {
   t.not(domture.window.ColorMap, undefined)
 })
 
-test(`loadScriptSycn() with relative path`, async t => {
+test(`loadScript() with invalid path`, async t => {
+  const domture = await createDomture({
+    rootDir: './fixtures/global-deps'
+  })
+
+  t.throws(() => domture.loadScript(require.resolve('a.js')), /Cannot find module/)
+})
+
+test(`loadScriptSync() with relative path`, async t => {
   const domture = await createDomture({
     rootDir: './fixtures/global-deps'
   })
@@ -193,4 +201,12 @@ test(`loadScriptSync() with absolute path`, async t => {
   domture.loadScriptSync(require.resolve('color-map/dist/color-map.es5.js'))
 
   t.not(domture.window.ColorMap, undefined)
+})
+
+test(`loadScriptSync() with invalid path`, async t => {
+  const domture = await createDomture({
+    rootDir: './fixtures/global-deps'
+  })
+
+  t.throws(() => domture.loadScriptSync(require.resolve('a.js')), /Cannot find module/)
 })
