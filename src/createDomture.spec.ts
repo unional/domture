@@ -172,7 +172,8 @@ test(`loadScript() with invalid path`, async t => {
     rootDir: './fixtures/global-deps'
   })
 
-  t.throws(() => domture.loadScript(require.resolve('a.js')), /Cannot find module/)
+  const err = await t.throws(domture.loadScript('./a.js'))
+  t.is(err.code, 'ENOENT')
 })
 
 test(`loadScriptSync() with relative path`, async t => {
@@ -208,5 +209,6 @@ test(`loadScriptSync() with invalid path`, async t => {
     rootDir: './fixtures/global-deps'
   })
 
-  t.throws(() => domture.loadScriptSync(require.resolve('a.js')), /Cannot find module/)
+  const err = t.throws(() => domture.loadScriptSync('./a.js'))
+  t.is(err.code, 'ENOENT')
 })
