@@ -125,6 +125,7 @@ test('preloadScripts should run sequentially', async t => {
     })
 
   t.not(harness.window.boo, undefined)
+  t.is(harness.window.boo.boo, 1)
 })
 
 test(`using jsdom constructor options`, async t => {
@@ -136,4 +137,32 @@ test(`using jsdom constructor options`, async t => {
       }
     }
   })
+})
+
+test(`loadScript() with relative path`, async t => {
+  const domture = await createDomture({
+    rootDir: './fixtures/global-deps'
+  })
+  domture.loadScript('./foo')
+
+  t.is(domture.window.foo.a, 1)
+})
+
+test(`loadScript() with relative path with extension`, async t => {
+  const domture = await createDomture({
+    rootDir: './fixtures/global-deps'
+  })
+  domture.loadScript('./foo.js')
+
+  t.is(domture.window.foo.a, 1)
+})
+
+test(`loadScript() with absolute path`, async t => {
+  const domture = await createDomture({
+    rootDir: './fixtures/global-deps'
+  })
+
+  domture.loadScript(require.resolve('color-map/dist/color-map.es5.js'))
+
+  t.not(domture.window.ColorMap, undefined)
 })
