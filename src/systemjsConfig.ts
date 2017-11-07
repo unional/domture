@@ -46,7 +46,12 @@ const transpilerBuilders = {
       },
       packages: {
         'app': {
-          defaultExtension: 'ts'
+          defaultExtension: 'ts',
+          meta: {
+            '*.ts': {
+              loader: 'plugin-typescript'
+            }
+          }
         },
         'typescript': {
           'main': 'lib/typescript.js',

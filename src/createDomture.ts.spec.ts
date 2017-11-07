@@ -38,12 +38,12 @@ test('import global script', async t => {
   t.deepEqual(textBox, { a: 1 })
 })
 
-test(`preload global script with type`, async t => {
-  const harness = await createDomture({
-    transpiler: 'typescript',
-    preloadScripts: ['./fixtures/ts-global/MyCompany/component/foo']
-  })
+test(`import global script with type`, async t => {
+  const harness = await createDomture({ transpiler: 'typescript' })
+
+  await harness.import('./fixtures/ts-global/MyCompany/component/foo')
   const foo = harness.window.MyCompany.component.foo
+
   t.deepEqual(foo, 'foo')
 })
 
