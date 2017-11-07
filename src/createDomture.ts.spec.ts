@@ -24,11 +24,27 @@ test('with rootDir should still load packages', async t => {
   t.is(globalStore.default.name, 'create')
 })
 
-test('import global namespace script', async t => {
+test('import global script', async t => {
   const harness = await createDomture({ transpiler: 'typescript' })
   await harness.import('./fixtures/ts-global/MyCompany/component/TextBox')
   const textBox = harness.window.MyCompany.component.TextBox
   t.deepEqual(textBox, { a: 1 })
+})
+
+test('import global script', async t => {
+  const harness = await createDomture({ transpiler: 'typescript' })
+  await harness.import('./fixtures/ts-global/MyCompany/component/TextBox')
+  const textBox = harness.window.MyCompany.component.TextBox
+  t.deepEqual(textBox, { a: 1 })
+})
+
+test(`import global script with type`, async t => {
+  const harness = await createDomture({ transpiler: 'typescript' })
+
+  await harness.import('./fixtures/ts-global/MyCompany/component/foo')
+  const foo = harness.window.MyCompany.component.foo
+
+  t.deepEqual(foo, 'foo')
 })
 
 test('load ts and js', async t => {
