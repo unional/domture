@@ -4,8 +4,8 @@ import { createDomture } from './index'
 
 test('import cjs', async t => {
   const domture = await createDomture()
-  const extend = await domture.import('deep-extend')
-  t.is(typeof extend, 'function')
+  const makeError = await domture.import('make-error')
+  t.is(typeof makeError, 'function')
 })
 
 test('import es6', async t => {
@@ -18,10 +18,10 @@ test('import es6', async t => {
 })
 
 test('import relative with default rootDir (".")', async t => {
-  const domture = await createDomture({ transpiler: 'typescript' })
+  const domture = await createDomture()
 
-  const config = await domture.import('./src/log')
-  t.truthy(config)
+  const foo = await domture.import('./fixtures/cjs/foo.js')
+  t.not(foo, undefined)
 })
 
 test('import relative', async t => {
@@ -211,4 +211,20 @@ test(`loadScriptSync() with invalid path`, async t => {
 
   const err = t.throws(() => domture.loadScriptSync('./a.js'))
   t.is(err.code, 'ENOENT')
+})
+
+test(`User metadata to override format detection`, async t => {
+  const domture = await createDomture({
+    rootDir: './fixtures/global-detection',
+    systemjsConfig: {
+      meta: {
+        'color-map.js': {
+          format: 'global'
+        }
+      }
+    }
+  })
+
+  await domture.import('./color-map.js')
+  t.not(domture.window.ColorMap, undefined)
 })

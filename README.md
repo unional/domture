@@ -47,6 +47,12 @@ test('customize', async t => {
         'make-error': {
           main: 'index'
         }
+      },
+      meta: {
+        // Do this if `some-global-script.js` is not detected correctly as global script when using `import()`.
+        'some-global-script.js': {
+          format: 'global'
+        }
       }
     },
     // configure jsdom.

@@ -1,6 +1,14 @@
 import { test } from 'ava'
 import { createDomture } from './index'
 
+
+test('import relative with default rootDir (".")', async t => {
+  const domture = await createDomture({ transpiler: 'typescript' })
+
+  const config = await domture.import('./src/log')
+  t.truthy(config)
+})
+
 test('load ts', async t => {
   const domture = await createDomture({
     rootDir: './fixtures/ts',
