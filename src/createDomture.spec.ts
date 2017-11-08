@@ -18,10 +18,10 @@ test('import es6', async t => {
 })
 
 test('import relative with default rootDir (".")', async t => {
-  const domture = await createDomture({ transpiler: 'typescript' })
+  const domture = await createDomture()
 
-  const config = await domture.import('./src/log')
-  t.truthy(config)
+  const foo = await domture.import('./fixtures/cjs/foo.js')
+  t.not(foo, undefined)
 })
 
 test('import relative', async t => {
