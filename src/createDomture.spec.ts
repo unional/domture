@@ -4,8 +4,8 @@ import { createDomture } from './index'
 
 test('import cjs', async t => {
   const domture = await createDomture()
-  const extend = await domture.import('deep-extend')
-  t.is(typeof extend, 'function')
+  const makeError = await domture.import('make-error')
+  t.is(typeof makeError, 'function')
 })
 
 test('import es6', async t => {
