@@ -1,4 +1,4 @@
-import extend = require('deep-extend')
+import { unpartialRecursively } from 'unpartial'
 
 import { DomtureConfig } from './config'
 
@@ -74,11 +74,25 @@ export function toSystemJSConfig(config: DomtureConfig) {
   const { systemjsConfig = {} } = config
   let sys: any = packageManagers[config.packageManager]()
 
-  extend(sys, transpilerBuilders[config.transpiler](config.rootDir))
-  extend(sys.packages, systemjsConfig.packages)
-  extend(sys.map, systemjsConfig.map)
+  sys = unpartialRecursively(sys, transpilerBuilders[config.transpiler](config.rootDir))
+  sys = unpartialRecursively(sys, systemjsConfig)
+  fixMeta(sys, systemjsConfig.meta)
+
   if (config.explicitExtension)
     sys.packages.app.defaultExtension = ''
 
   return sys
+}
+
+/**
+ * When using meta, user declare them based off the `rootDir`.
+ * It is mapped to `app/*` so need to adjust the keys accordingly.
+ */
+function fixMeta(sys, meta) {
+  if (meta) {
+    sys.meta = {}
+    Object.keys(meta).forEach(k => {
+      sys.meta[`app/${k}`] = meta![k]
+    })
+  }
 }

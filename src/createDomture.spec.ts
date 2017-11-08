@@ -212,3 +212,19 @@ test(`loadScriptSync() with invalid path`, async t => {
   const err = t.throws(() => domture.loadScriptSync('./a.js'))
   t.is(err.code, 'ENOENT')
 })
+
+test(`User metadata to override format detection`, async t => {
+  const domture = await createDomture({
+    rootDir: './fixtures/global-detection',
+    systemjsConfig: {
+      meta: {
+        'color-map.js': {
+          format: 'global'
+        }
+      }
+    }
+  })
+
+  await domture.import('./color-map.js')
+  t.not(domture.window.ColorMap, undefined)
+})
