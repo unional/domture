@@ -91,7 +91,21 @@ test('preload scripts with js extension and explicitExtension true', async t => 
   t.not(domture.window.ColorMap, undefined)
 })
 
-test.only('support multiple extension automatically', async t => {
+test.only('support ts and js automatically', async t => {
+  const domture = await createDomture({
+    rootDir: './fixtures/ts',
+    transpiler: 'typescript'
+  })
+
+  console.log(domture.systemjs.getConfig())
+  const foo = await domture.import('./foo')
+  t.deepEqual(foo.foo(), { value: 'foo' })
+
+  const boo = await domture.import('./boo')
+  t.is(boo.boo(), 'boo')
+})
+
+test.only('support ts and tsx automatically', async t => {
   const domture = await createDomture({
     rootDir: './fixtures/tsx',
     transpiler: 'typescript'
