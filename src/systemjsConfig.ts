@@ -46,10 +46,21 @@ const transpilerBuilders = {
       },
       packages: {
         'app': {
-          defaultExtension: 'ts',
+          defaultExtension: false,
           meta: {
-            '*.ts': {
-              loader: 'plugin-typescript'
+            '*': {
+              oneOptions: {
+                meta: {
+                  '*.ts': {
+                    loader: 'plugin-typescript'
+                  },
+                  '*.tsx': {
+                    loader: 'plugin-typescript'
+                  },
+                  '*.js': {}
+                }
+              },
+              loader: 'one-plugin'
             }
           }
         },
