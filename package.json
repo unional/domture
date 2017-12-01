@@ -1,7 +1,7 @@
 {
   "name": "domture",
   "description": "Test fixture with jsdom + SystemJS + Node",
-  "version": "0.8.9",
+  "version": "0.9.0",
   "main": "dist-es5/index.js",
   "module": "dist-es2015/index.js",
   "typings": "dist-es5/index.d.ts",
