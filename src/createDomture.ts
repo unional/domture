@@ -56,6 +56,7 @@ function extendJSDOM(dom: JSDOM, config: DomtureConfig): Domture {
 
     return systemjs.import(id).then(m => {
       const [second, nanoSecond] = process.hrtime(startTick)
+      // istanbul ignore next
       log.onDebug(log => log(`Import completed for ${identifier} (${second * 1000 + nanoSecond / 1e6} ms)`))
       return m
     })
@@ -114,6 +115,7 @@ function extendJSDOM(dom: JSDOM, config: DomtureConfig): Domture {
 
 function configureSystemJS(domture, config) {
   const sysConfig = toSystemJSConfig(config)
+  // istanbul ignore next
   log.onDebug(log => log('SystemJS configuration:', JSON.stringify(sysConfig)))
   domture.systemjs.config(sysConfig)
 }
