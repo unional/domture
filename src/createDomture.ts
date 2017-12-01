@@ -51,6 +51,7 @@ function extendJSDOM(dom: JSDOM, config: DomtureConfig): Domture {
     // the error gets out of band and cannot be catch here to do retry.
     const id = config.moduleFileExtensions ? resolveModuleId(moduleName, config.moduleFileExtensions) : moduleName
 
+    // istanbul ignore next
     log.onDebug(log => id === moduleName ? log(`Import ${identifier} as ${moduleName}`) : log(`Import ${identifier} as ${moduleName} (${id}})`))
 
     return systemjs.import(id).then(m => {
