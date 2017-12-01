@@ -44,32 +44,32 @@ function extendJSDOM(dom: JSDOM, config: DomtureConfig): Domture {
   result.import = function (identifier: string) {
     const startTick = process.hrtime()
     const moduleName = toSystemJSModuleName(identifier)
-    log.onDebug(log => log(`Import ${identifier} as ${moduleName}`))
 
-    let importing
-    if (config.moduleFileExtensions) {
-      const [second, nanoSecond] = process.hrtime(startTick)
-      log.onDebug(log => log(`Import 1 ${identifier} (${second * 1000 + nanoSecond / 1e6} ms)`))
-      const normalizedUrl = systemjs.resolveSync(moduleName)
-      if (normalizedUrl.startsWith('file://')) {
-        const [second, nanoSecond] = process.hrtime(startTick)
-        log.onDebug(log => log(`Import 2 ${identifier} (${second * 1000 + nanoSecond / 1e6} ms)`))
-        const path = normalizedUrl.slice(7)
-        const ext = config.moduleFileExtensions.find(ext => fs.existsSync(`${path}.${ext}`))
-        if (ext)
-          importing = systemjs.import(`${normalizedUrl}.${ext}`)
-      }
-    }
+    // I have to resolve the file name myself outside of systemjs because of
+    // https://github.com/tmpvar/jsdom/issues/1579
+    // When systemjs fails to load the file,
+    // the error gets out of band and cannot be catch here to do retry.
+    const id = config.moduleFileExtensions ? resolveModuleId(moduleName, config.moduleFileExtensions) : moduleName
 
-    if (!importing)
-      importing = systemjs.import(moduleName)
+    log.onDebug(log => id === moduleName ? log(`Import ${identifier} as ${moduleName}`) : log(`Import ${identifier} as ${moduleName} (${id}})`))
 
-
-    return importing.then(m => {
+    return systemjs.import(id).then(m => {
       const [second, nanoSecond] = process.hrtime(startTick)
       log.onDebug(log => log(`Import completed for ${identifier} (${second * 1000 + nanoSecond / 1e6} ms)`))
       return m
     })
+  }
+
+  function resolveModuleId(moduleName, moduleFileExtensions: string[]) {
+    const normalizedUrl = systemjs.resolveSync(moduleName)
+    if (normalizedUrl.startsWith('file://')) {
+      const path = normalizedUrl.slice(7)
+      const ext = moduleFileExtensions.find(ext => fs.existsSync(`${path}.${ext}`))
+      if (ext)
+        return `${normalizedUrl}.${ext}`
+    }
+
+    return moduleName
   }
 
   result.loadScript = function (this: Domture, identifier: string) {

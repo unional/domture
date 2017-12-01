@@ -40,7 +40,10 @@ test('customize', async t => {
     transpiler: 'typescript',
     // Need to do `./index.ts` or `./index.js`.
     // Useful when you need to load both types.
+    // Deprecated. Use `moduleFileExtensions` instead.
     explicitExtension: true,
+    // indicate which extension to try during `import()`
+    moduleFileExtensions: ['ts', 'tsx']
     systemjsConfig: {
       packages: {
         // This is need for some packages due to https://github.com/systemjs/systemjs/issues/1603
