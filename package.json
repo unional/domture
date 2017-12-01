@@ -1,7 +1,7 @@
 {
   "name": "domture",
   "description": "Test fixture with jsdom + SystemJS + Node",
-  "version": "0.9.0",
+  "version": "0.0.0-development",
   "main": "dist-es5/index.js",
   "module": "dist-es2015/index.js",
   "typings": "dist-es5/index.d.ts",
@@ -18,15 +18,14 @@
     "dc": "npm run dependency-check",
     "dependency-check": "dependency-check . --unused --no-dev -i plugin-typescript -i systemjs -i @types/systemjs -i @types/jsdom -i one-plugin && dependency-check . --missing --no-dev",
     "lint": "tslint -p tsconfig.json 'src/**/*.ts'",
-    "postpublish": "git push",
-    "preversion": "git pull && npm run verify",
-    "version": "npm run remove-spec",
+    "prepublish": "npm run verify && npm run remove-spec",
     "verify": "npm run lint && npm run coverage && npm run dependency-check",
     "coverage": "nyc npm test",
     "coveralls": "nyc report --reporter=text-lcov | coveralls",
     "remove-spec": "rimraf dist-es5/**/*.spec.*",
     "test": "npm run clean && tsc && ava",
-    "watch": "npm run clean && node scripts/watch.js"
+    "watch": "npm run clean && node scripts/watch.js",
+    "semantic-release": "semantic-release pre && npm publish && semantic-release post"
   },
   "author": {
     "name": "Homa Wong",
@@ -38,7 +37,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git://github.com/unional/domture.git"
+    "url": "https://github.com/unional/domture.git"
   },
   "license": "MIT",
   "ava": {
@@ -63,6 +62,16 @@
       "**/fixtures/**/*"
     ]
   },
+  "release": {
+    "analyzeCommits": {
+      "releaseRules": [
+        {
+          "breaking": true,
+          "release": "minor"
+        }
+      ]
+    }
+  },
   "devDependencies": {
     "@types/node": "^8.0.53",
     "aurelia-logging-color": "^0.5.11",
@@ -77,7 +86,8 @@
     "rimraf": "^2.6.2",
     "tslint": "^5.8.0",
     "tslint-config-unional": "^0.8.0",
-    "typescript": "^2.6.2"
+    "typescript": "^2.6.2",
+    "semantic-release": "^8.2.0"
   },
   "dependencies": {
     "@types/jsdom": "^11.0.4",
