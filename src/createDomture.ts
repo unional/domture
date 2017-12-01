@@ -41,12 +41,31 @@ function readSystemJSScript() {
 function extendJSDOM(dom: JSDOM, config: DomtureConfig): Domture {
   const result = dom as any
   const systemjs = result.systemjs = result.window.SystemJS as SystemJSLoader.System
-
   result.import = function (identifier: string) {
     const startTick = process.hrtime()
     const moduleName = toSystemJSModuleName(identifier)
     log.onDebug(log => log(`Import ${identifier} as ${moduleName}`))
-    return systemjs.import(moduleName).then(m => {
+
+    let importing
+    if (config.moduleFileExtensions) {
+      const [second, nanoSecond] = process.hrtime(startTick)
+      log.onDebug(log => log(`Import 1 ${identifier} (${second * 1000 + nanoSecond / 1e6} ms)`))
+      const normalizedUrl = systemjs.resolveSync(moduleName)
+      if (normalizedUrl.startsWith('file://')) {
+        const [second, nanoSecond] = process.hrtime(startTick)
+        log.onDebug(log => log(`Import 2 ${identifier} (${second * 1000 + nanoSecond / 1e6} ms)`))
+        const path = normalizedUrl.slice(7)
+        const ext = config.moduleFileExtensions.find(ext => fs.existsSync(`${path}.${ext}`))
+        if (ext)
+          importing = systemjs.import(`${normalizedUrl}.${ext}`)
+      }
+    }
+
+    if (!importing)
+      importing = systemjs.import(moduleName)
+
+
+    return importing.then(m => {
       const [second, nanoSecond] = process.hrtime(startTick)
       log.onDebug(log => log(`Import completed for ${identifier} (${second * 1000 + nanoSecond / 1e6} ms)`))
       return m

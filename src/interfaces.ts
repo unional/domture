@@ -21,9 +21,9 @@ export interface Domture extends JSDOM {
    * sometimes this does not work properly because `systemjs` incorrectly detect the file as `amd` or `cjs`.
    * In those cases, you `loadScript()` to load the file.
    * @param identifier Module name or case-insensitive namespace path (`MyPackage.some.thing`)
-   * or relative path (`./js/pan/base/grid`)
+   * or relative path (`./src/logic`)
    */
-  import(identifier: string): Promise<any>
+  import<M = any>(identifier: string): Promise<M>
 
   /**
    * Load a script through script tag.

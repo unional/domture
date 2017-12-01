@@ -18,6 +18,10 @@ export interface DomtureConfig {
    * This is useful when using `typescript` while also need to load javascript.
    */
   explicitExtension?: boolean,
+  /**
+   * If specified, will attempt to locate files with these extensions.
+   */
+  moduleFileExtensions?: string[],
   preloadScripts?: string[],
   systemjsConfig?: SystemJSConfig,
   jsdomConstructorOptions?: ConstructorOptions
