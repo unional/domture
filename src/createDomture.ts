@@ -41,16 +41,33 @@ function readSystemJSScript() {
 function extendJSDOM(dom: JSDOM, config: DomtureConfig): Domture {
   const result = dom as any
   const systemjs = result.systemjs = result.window.SystemJS as SystemJSLoader.System
-
   result.import = function (identifier: string) {
     const startTick = process.hrtime()
     const moduleName = toSystemJSModuleName(identifier)
-    log.onDebug(log => log(`Import ${identifier} as ${moduleName}`))
-    return systemjs.import(moduleName).then(m => {
+
+    // I have to resolve the file name myself outside of systemjs because of
+    // https://github.com/tmpvar/jsdom/issues/1579
+    // When systemjs fails to load the file,
+    // the error gets out of band and cannot be catch here to do retry.
+    const id = config.moduleFileExtensions ? resolveModuleId(moduleName, config.moduleFileExtensions) : moduleName
+
+    // istanbul ignore next
+    log.onDebug(log => id === moduleName ? log(`Import ${identifier} as ${moduleName}`) : log(`Import ${identifier} as ${moduleName} (${id}})`))
+
+    return systemjs.import(id).then(m => {
       const [second, nanoSecond] = process.hrtime(startTick)
+      // istanbul ignore next
       log.onDebug(log => log(`Import completed for ${identifier} (${second * 1000 + nanoSecond / 1e6} ms)`))
       return m
     })
+  }
+
+  function resolveModuleId(moduleName, moduleFileExtensions: string[]) {
+    const normalizedUrl = systemjs.resolveSync(moduleName)
+    // slice(7): trim 'file://'
+    const path = normalizedUrl.slice(7)
+    const ext = moduleFileExtensions.find(ext => fs.existsSync(`${path}.${ext}`))!
+    return `${normalizedUrl}.${ext}`
   }
 
   result.loadScript = function (this: Domture, identifier: string) {
@@ -98,6 +115,7 @@ function extendJSDOM(dom: JSDOM, config: DomtureConfig): Domture {
 
 function configureSystemJS(domture, config) {
   const sysConfig = toSystemJSConfig(config)
+  // istanbul ignore next
   log.onDebug(log => log('SystemJS configuration:', JSON.stringify(sysConfig)))
   domture.systemjs.config(sysConfig)
 }

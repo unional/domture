@@ -81,7 +81,7 @@ test('preload color-map script', async t => {
   t.not(domture.window.ColorMap, undefined)
 })
 
-test('import color-map still works', async t => {
+test('import color-map module', async t => {
   const domture = await createDomture()
 
   const colorMap = await domture.import('color-map')
@@ -89,14 +89,14 @@ test('import color-map still works', async t => {
   t.not(colorMap, undefined)
 })
 
-test('import global-store should fill global namespace', async t => {
+test('import global-store script file should fill global namespace', async t => {
   const harness = await createDomture()
   await harness.import('./node_modules/global-store/dist/global-store.es5.js')
 
   t.not(harness.window.GlobalStore, undefined)
 })
 
-test('import `color-map` should fill global namespace', async t => {
+test('import color-map script file should fill global namespace', async t => {
   const harness = await createDomture()
   await harness.import(require.resolve('color-map/dist/color-map.es5.js'))
 

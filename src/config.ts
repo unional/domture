@@ -16,8 +16,13 @@ export interface DomtureConfig {
   /**
    * When true, require to specify extension explicitly.
    * This is useful when using `typescript` while also need to load javascript.
+   * @deprecated this flag requires actual code to also use explicit extension in its `require` and `import`. Use `moduleFileExtensions` instead
    */
   explicitExtension?: boolean,
+  /**
+   * If specified, will attempt to locate files with these extensions.
+   */
+  moduleFileExtensions?: string[],
   preloadScripts?: string[],
   systemjsConfig?: SystemJSConfig,
   jsdomConstructorOptions?: ConstructorOptions
