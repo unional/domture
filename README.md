@@ -42,7 +42,9 @@ test('customize', async t => {
     // Useful when you need to load both types.
     // Deprecated. Use `moduleFileExtensions` instead.
     explicitExtension: true,
-    // indicate which extension to try during `import()`
+    // Indicates which extension to try during `import()`
+    // There is a performance impact as it needs to check look at the disk for each extension.
+    // Thus this is designed to be optional and need to explicitly defined.
     moduleFileExtensions: ['ts', 'tsx']
     systemjsConfig: {
       packages: {
