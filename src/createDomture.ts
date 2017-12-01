@@ -62,14 +62,10 @@ function extendJSDOM(dom: JSDOM, config: DomtureConfig): Domture {
 
   function resolveModuleId(moduleName, moduleFileExtensions: string[]) {
     const normalizedUrl = systemjs.resolveSync(moduleName)
-    if (normalizedUrl.startsWith('file://')) {
-      const path = normalizedUrl.slice(7)
-      const ext = moduleFileExtensions.find(ext => fs.existsSync(`${path}.${ext}`))
-      if (ext)
-        return `${normalizedUrl}.${ext}`
-    }
-
-    return moduleName
+    // slice(7): trim 'file://'
+    const path = normalizedUrl.slice(7)
+    const ext = moduleFileExtensions.find(ext => fs.existsSync(`${path}.${ext}`))!
+    return `${normalizedUrl}.${ext}`
   }
 
   result.loadScript = function (this: Domture, identifier: string) {
