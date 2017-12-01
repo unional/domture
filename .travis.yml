@@ -8,10 +8,13 @@ notifications:
 
 node_js:
   - "stable"
+  - '8'
+  - '6'
 
 branches:
-  except:
-    - /^v\d+\.\d+\.\d+$/
+  only:
+    - master
+    - /^greenkeeper.*$/
 
 before_install:
 - npm install -g greenkeeper-lockfile@1
