@@ -94,6 +94,7 @@
     "@types/systemjs": "^0.20.6",
     "@unional/logging": "^0.2.3",
     "file-url": "^2.0.2",
+    "is-windows": "^1.0.1",
     "jsdom": "^11.5.1",
     "one-plugin": "0.0.3",
     "plugin-typescript": "^8.0.0",

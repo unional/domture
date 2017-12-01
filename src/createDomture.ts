@@ -1,5 +1,6 @@
 import fs = require('fs')
 import fileUrl = require('file-url')
+import isWindows = require('is-windows')
 import { JSDOM, ConstructorOptions } from 'jsdom'
 import path = require('path')
 import { unpartial } from 'unpartial'
@@ -62,14 +63,6 @@ function extendJSDOM(dom: JSDOM, config: DomtureConfig): Domture {
     })
   }
 
-  function resolveModuleId(moduleName, moduleFileExtensions: string[]) {
-    const normalizedUrl = systemjs.resolveSync(moduleName)
-    // slice(7): trim 'file://'
-    const path = normalizedUrl.slice(7)
-    const ext = moduleFileExtensions.find(ext => fs.existsSync(`${path}.${ext}`))!
-    return `${normalizedUrl}.${ext}`
-  }
-
   result.loadScript = function (this: Domture, identifier: string) {
     return loadScriptContent(identifier)
       .then(content => {
@@ -110,6 +103,16 @@ function extendJSDOM(dom: JSDOM, config: DomtureConfig): Domture {
     if (!explicitExtension && scriptPath.slice(-3) !== '.js')
       scriptPath += '.js'
     return scriptPath
+  }
+
+  function resolveModuleId(moduleName, moduleFileExtensions: string[]) {
+    const normalizedUrl = systemjs.resolveSync(moduleName)
+    // slice(7): trim 'file://' + '/Users/x/y/z'
+    // slice(8): trime 'file:///' + 'C:/Users/...'
+    // istanbul ignore next
+    const path = normalizedUrl.slice(isWindows() ? 8 : 7)
+    const ext = moduleFileExtensions.find(ext => fs.existsSync(`${path}.${ext}`))!
+    return `${normalizedUrl}.${ext}`
   }
 }
 
