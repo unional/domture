@@ -97,7 +97,6 @@ test('support loading multiple extensions: ts and js', async t => {
     transpiler: 'typescript',
     moduleFileExtensions: ['ts', 'js']
   })
-
   const foo = await domture.import('./foo')
   t.deepEqual(foo.foo(), { value: 'foo' })
 
