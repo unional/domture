@@ -18,7 +18,7 @@
     "dc": "npm run dependency-check",
     "dependency-check": "dependency-check . --unused --no-dev -i plugin-typescript -i systemjs -i @types/systemjs -i @types/jsdom -i one-plugin && dependency-check . --missing --no-dev",
     "lint": "tslint -p tsconfig.json 'src/**/*.ts'",
-    "prepublish": "npm run verify && npm run remove-spec",
+    "prepublishOnly": "npm run build",
     "verify": "npm run lint && npm run coverage && npm run dependency-check",
     "coverage": "nyc npm test",
     "coveralls": "nyc report --reporter=text-lcov | coveralls",
