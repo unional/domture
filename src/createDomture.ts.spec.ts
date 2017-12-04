@@ -107,11 +107,20 @@ test('support loading multiple extensions: ts and js', async t => {
 test('support loading multiple extensions: ts and tsx', async t => {
   const domture = await createDomture({
     rootDir: './fixtures/tsx',
-    transpiler: 'typescript',
-    moduleFileExtensions: ['ts', 'tsx']
+    transpiler: 'typescript'
   })
   const foo = await domture.import('./foo')
   t.deepEqual(foo.foo(), { value: 'foo' })
   const doo = await domture.import('./doo')
   t.is(typeof doo.render, 'function')
+})
+
+test('support subfolder/index reference', async t => {
+  const domture = await createDomture({
+    rootDir: './fixtures/with-subfolder',
+    transpiler: 'typescript'
+  })
+
+  const foo = await domture.import('./index')
+  t.deepEqual(foo.foo(), { value: 'foo' })
 })

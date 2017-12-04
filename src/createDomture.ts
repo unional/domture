@@ -1,6 +1,5 @@
 import fs = require('fs')
 import fileUrl = require('file-url')
-import isWindows = require('is-windows')
 import { JSDOM, ConstructorOptions } from 'jsdom'
 import path = require('path')
 import { unpartial } from 'unpartial'
@@ -42,20 +41,14 @@ function readSystemJSScript() {
 function extendJSDOM(dom: JSDOM, config: DomtureConfig): Domture {
   const result = dom as any
   const systemjs = result.systemjs = result.window.SystemJS as SystemJSLoader.System
+
   result.import = function (identifier: string) {
     const startTick = process.hrtime()
     const moduleName = toSystemJSModuleName(identifier)
 
-    // I have to resolve the file name myself outside of systemjs because of
-    // https://github.com/tmpvar/jsdom/issues/1579
-    // When systemjs fails to load the file,
-    // the error gets out of band and cannot be catch here to do retry.
-    const id = config.moduleFileExtensions ? resolveModuleId(moduleName, config.moduleFileExtensions) : moduleName
-
     // istanbul ignore next
-    log.onDebug(log => id === moduleName ? log(`Import ${identifier} as ${moduleName}`) : log(`Import ${identifier} as ${moduleName} (${id}})`))
-
-    return systemjs.import(id).then(m => {
+    log.onDebug(log => log(`Import ${identifier} as ${moduleName}`))
+    return systemjs.import(moduleName).then(m => {
       const [second, nanoSecond] = process.hrtime(startTick)
       // istanbul ignore next
       log.onDebug(log => log(`Import completed for ${identifier} (${second * 1000 + nanoSecond / 1e6} ms)`))
@@ -104,16 +97,6 @@ function extendJSDOM(dom: JSDOM, config: DomtureConfig): Domture {
       scriptPath += '.js'
     return scriptPath
   }
-
-  function resolveModuleId(moduleName, moduleFileExtensions: string[]) {
-    const normalizedUrl = systemjs.resolveSync(moduleName)
-    // slice(7): trim 'file://' + '/Users/x/y/z'
-    // slice(8): trime 'file:///' + 'C:/Users/...'
-    // istanbul ignore next
-    const path = normalizedUrl.slice(isWindows() ? 8 : 7)
-    const ext = moduleFileExtensions.find(ext => fs.existsSync(`${path}.${ext}`))!
-    return `${normalizedUrl}.${ext}`
-  }
 }
 
 function configureSystemJS(domture, config) {
@@ -121,6 +104,12 @@ function configureSystemJS(domture, config) {
   // istanbul ignore next
   log.onDebug(log => log('SystemJS configuration:', JSON.stringify(sysConfig)))
   domture.systemjs.config(sysConfig)
+
+  // When loading systemjs inside jsdom,
+  // `systemjs._nodeRequire` is undefined.
+  // Setting it to give `plugin.ts` access to all node modules.
+  domture.systemjs._nodeRequire = require
+  domture.systemjs.domtureConfig = config
 }
 
 function toSystemJSModuleName(identifier: string) {

@@ -43,9 +43,11 @@ test('customize', async t => {
     // Deprecated. Use `moduleFileExtensions` instead.
     explicitExtension: true,
     // Indicates which extension to try during `import()`
-    // There is a performance impact as it needs to check look at the disk for each extension.
-    // Thus this is designed to be optional and need to explicitly defined.
-    moduleFileExtensions: ['ts', 'tsx']
+    // This is needed only if you need to do something special,
+    // e.g. `allowJs` with TypeScirpt project.
+    // By default, `domture` will look for 'js' and 'jsx` for JavaScript projects,
+    // 'ts', 'tsx' for TypeScript projects.
+    moduleFileExtensions: ['ts', 'js']
     systemjsConfig: {
       packages: {
         // This is need for some packages due to https://github.com/systemjs/systemjs/issues/1603
