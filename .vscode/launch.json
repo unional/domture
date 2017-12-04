@@ -24,6 +24,22 @@
       "args": [
         "${workspaceFolder}/dist/es5/createDomture.spec.js"
       ]
+    },
+    {
+      "name": "Run debug.ts",
+      "type": "node",
+      "request": "launch",
+      "args": [
+        "${workspaceFolder}/src/debug.ts"
+      ],
+      "runtimeArgs": [
+        "--nolazy",
+        "-r",
+        "ts-node/register"
+      ],
+      "sourceMaps": true,
+      "cwd": "${workspaceRoot}",
+      "protocol": "inspector"
     }
   ]
 }

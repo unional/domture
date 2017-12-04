@@ -34,7 +34,12 @@ const transpilerBuilders = {
       },
       packages: {
         'app': {
-          defaultExtension: 'js'
+          defaultExtension: false,
+          meta: {
+            '*': {
+              loader: 'systemjs-plugin-domture'
+            }
+          }
         }
       }
     }
@@ -49,18 +54,7 @@ const transpilerBuilders = {
           defaultExtension: false,
           meta: {
             '*': {
-              loader: 'one-plugin',
-              oneOptions: {
-                meta: {
-                  '*.ts': {
-                    loader: 'plugin-typescript'
-                  },
-                  '*.js': {},
-                  '*.tsx': {
-                    loader: 'plugin-typescript'
-                  }
-                }
-              }
+              loader: 'systemjs-plugin-domture'
             }
           }
         },
