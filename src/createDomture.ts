@@ -1,18 +1,17 @@
 import fs = require('fs')
 import fileUrl = require('file-url')
-import { JSDOM, ConstructorOptions } from 'jsdom'
+import { JSDOM, ConstructorOptions, DOMWindow } from 'jsdom'
 import path = require('path')
 import { unpartial } from 'unpartial'
 
 import { DomtureConfig, defaultConfig } from './config'
+import { configureSystemJS, toSystemJSModuleName } from './configureSystemJS'
 import { Domture } from './interfaces'
 import { log } from './log'
 
-import { toSystemJSConfig } from './systemjsConfig'
-
 const url = fileUrl(process.cwd()) + '/'
 
-export function createDomture(givenConfig: Partial<DomtureConfig> = {}): Promise<Domture> {
+export async function createDomture(givenConfig: Partial<DomtureConfig> = {}): Promise<Domture> {
   const config = unpartial(defaultConfig, givenConfig)
   const dom = createJSDOM(config.jsdomConstructorOptions)
   const domture = extendJSDOM(dom, config)
@@ -20,9 +19,9 @@ export function createDomture(givenConfig: Partial<DomtureConfig> = {}): Promise
   configureSystemJS(domture, config)
 
   if (config.preloadScripts) {
-    config.preloadScripts.forEach(s => domture['loadScriptSyncInternal'](true, config.rootDir, s))
+    config.preloadScripts.forEach(s => loadScriptSync(domture.window, true, config.rootDir, s))
   }
-  return Promise.resolve(domture)
+  return domture
 }
 
 function createJSDOM(givenOptions: Partial<ConstructorOptions> = {}) {
@@ -57,65 +56,51 @@ function extendJSDOM(dom: JSDOM, config: DomtureConfig): Domture {
   }
 
   result.loadScript = function (this: Domture, identifier: string) {
-    return loadScriptContent(identifier)
-      .then(content => {
-        const scriptEL = this.window.document.createElement('script')
-        scriptEL.textContent = content
-        this.window.document.head.appendChild(scriptEL)
-      })
+    return loadScript(this.window, config.explicitExtension, config.rootDir, identifier)
   }
+
   result.loadScriptSync = function (this: Domture, identifier: string) {
-    this['loadScriptSyncInternal'](config.explicitExtension, config.rootDir, identifier)
+    loadScriptSync(this.window, config.explicitExtension, config.rootDir, identifier)
   }
 
-  result.loadScriptSyncInternal = function (this: Domture, explicitExtension: boolean | undefined, rootDir: string, identifier: string) {
-    const scriptEL = this.window.document.createElement('script')
-    scriptEL.textContent = loadScriptContentSync(explicitExtension, rootDir, identifier)
-    this.window.document.head.appendChild(scriptEL)
-  }
   return result
-
-  function loadScriptContent(identifier: string) {
-    const scriptPath = resolveScriptPath(config.explicitExtension || false, config.rootDir, identifier)
-    return new Promise<string>((a, r) => {
-      fs.readFile(scriptPath, { encoding: 'utf8' }, (err, data) => {
-        if (err)
-          r(err)
-        a(data)
-      })
+}
+function loadScript(window: DOMWindow, explicitExtension: boolean | undefined, rootDir: string, identifier: string) {
+  return loadScriptContent(explicitExtension, rootDir, identifier)
+    .then(content => {
+      injectScriptTag(window, content)
     })
-  }
-
-  function loadScriptContentSync(explicitExtension: boolean | undefined, rootDir: string, identifier: string) {
-    const scriptPath = resolveScriptPath(explicitExtension, rootDir, identifier)
-    return fs.readFileSync(scriptPath, 'utf8')
-  }
-
-  function resolveScriptPath(explicitExtension: boolean | undefined, rootDir: string, identifier: string) {
-    let scriptPath = path.resolve(rootDir, identifier)
-    if (!explicitExtension && scriptPath.slice(-3) !== '.js')
-      scriptPath += '.js'
-    return scriptPath
-  }
 }
 
-function configureSystemJS(domture, config) {
-  const sysConfig = toSystemJSConfig(config)
-  // istanbul ignore next
-  log.onDebug(log => log('SystemJS configuration:', JSON.stringify(sysConfig)))
-  domture.systemjs.config(sysConfig)
-
-  // When loading systemjs inside jsdom,
-  // `systemjs._nodeRequire` is undefined.
-  // Setting it to give `plugin.ts` access to all node modules.
-  domture.systemjs._nodeRequire = require
-  domture.systemjs.domtureConfig = config
+function loadScriptContent(explicitExtension: boolean | undefined, rootDir: string, identifier: string) {
+  const scriptPath = resolveScriptPath(explicitExtension || false, rootDir, identifier)
+  return new Promise<string>((a, r) => {
+    fs.readFile(scriptPath, { encoding: 'utf8' }, (err, data) => {
+      if (err) r(err)
+      a(data)
+    })
+  })
 }
 
-function toSystemJSModuleName(identifier: string) {
-  return isRelative(identifier) ? identifier.replace('.', 'app') : identifier
+function loadScriptSync(window: DOMWindow, explicitExtension: boolean | undefined, rootDir: string, identifier: string) {
+  const content = loadScriptContentSync(explicitExtension, rootDir, identifier)
+  injectScriptTag(window, content)
 }
 
-function isRelative(identifier: string) {
-  return identifier.indexOf('.') === 0
+function loadScriptContentSync(explicitExtension: boolean | undefined, rootDir: string, identifier: string) {
+  const scriptPath = resolveScriptPath(explicitExtension, rootDir, identifier)
+  return fs.readFileSync(scriptPath, 'utf8')
+}
+
+function resolveScriptPath(explicitExtension: boolean | undefined, rootDir: string, identifier: string) {
+  let scriptPath = path.resolve(rootDir, identifier)
+  if (!explicitExtension && scriptPath.slice(-3) !== '.js')
+    scriptPath += '.js'
+  return scriptPath
+}
+
+function injectScriptTag(window: DOMWindow, scriptContent: string) {
+  const scriptEL = window.document.createElement('script')
+  scriptEL.textContent = scriptContent
+  window.document.head.appendChild(scriptEL)
 }
