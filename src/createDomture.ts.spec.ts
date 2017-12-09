@@ -115,12 +115,22 @@ test('support loading multiple extensions: ts and tsx', async t => {
   t.is(typeof doo.render, 'function')
 })
 
-test('support subfolder/index reference', async t => {
+test.skip('support subfolder/index reference', async t => {
   const domture = await createDomture({
-    rootDir: './fixtures/with-subfolder',
+    rootDir: './fixtures/ts-with-subfolder',
     transpiler: 'typescript'
   })
 
   const foo = await domture.import('./index')
+  console.log('fo', foo)
   t.deepEqual(foo.foo(), { value: 'foo' })
+})
+
+test('project', async t => {
+  const domture = await createDomture({
+    rootDir: './fixtures/ts-project/src',
+    transpiler: 'typescript'
+  })
+  const p = await domture.import('./index')
+  t.deepEqual(p.foo(), { value: 'foo' })
 })
