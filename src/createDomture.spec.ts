@@ -228,3 +228,12 @@ test(`User metadata to override format detection`, async t => {
   await domture.import('./color-map.js')
   t.not(domture.window.ColorMap, undefined)
 })
+
+test.only('support subfolder/index reference', async t => {
+  const domture = await createDomture({
+    rootDir: './fixtures/with-subfolder'
+  })
+
+  const foo = await domture.import('./index')
+  t.deepEqual(foo(), { value: 'foo' })
+})
