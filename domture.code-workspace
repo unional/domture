@@ -5,6 +5,12 @@
 		},
 		{
 			"path": "/Users/hwong/github/unional/systemjs-plugin-domture"
+		},
+		{
+			"path": "/Users/hwong/github/systemjs/systemjs"
+		},
+		{
+			"path": "/Users/hwong/github/unional/systemjs-plugin-node"
 		}
 	],
 	"settings": {

@@ -41,6 +41,41 @@ function extendJSDOM(dom: JSDOM, config: DomtureConfig): Domture {
   const result = dom as any
   const systemjs = result.systemjs = result.window.SystemJS as SystemJSLoader.System
 
+  result.nodeImport = function (identifier: string) {
+    const startTick = process.hrtime()
+    const id = resolveID(config.rootDir, identifier)
+    // istanbul ignore next
+    log.onDebug(log => log(`NodeImport ${identifier} as ${id}`))
+    const m = require(id)
+    const [second, nanoSecond] = process.hrtime(startTick)
+    // istanbul ignore next
+    log.onDebug(log => log(`NodeImport completed for ${identifier} (${second * 1000 + nanoSecond / 1e6} ms)`))
+    return m
+  }
+  function resolveID(baseDir, id) {
+    if (isRelative(id))
+      return resolveRelative(baseDir, id)
+    return id
+  }
+  function isRelative(id: string) {
+    return id.startsWith('.')
+  }
+  function resolveRelative(from: string, to: string) {
+    const froms = path.resolve(from).split('/')
+    const tos = to.split('/')
+    while (tos[0].startsWith('.')) {
+      if (tos[0] === '.')
+        tos.shift()
+      else if (tos[0] === '..') {
+        froms.pop()
+        tos.shift()
+      }
+      else
+        break;
+    }
+    return froms.concat(tos).join('/')
+  }
+
   result.import = function (identifier: string) {
     const startTick = process.hrtime()
     const moduleName = toSystemJSModuleName(identifier)

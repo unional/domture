@@ -26,6 +26,13 @@ export interface Domture extends JSDOM {
   import<M = any>(identifier: string): Promise<M>
 
   /**
+   * Import NodeJS modules or files.
+   * It will not alter global namespace and does not work with transpiler.
+   * But the Node resolution works.
+   */
+  nodeImport<M = any>(identifier: string): Promise<M>
+
+  /**
    * Load a script through script tag.
    * (so obviously, it can't be typescript)
    */
