@@ -1,8 +1,3 @@
-export class NodeModuleLoader {
-  registry = new NodeModuleRegistry()
-  import(_key, _parentKey?) { return }
-  resolve(_key, _parentKey?) { return }
-}
 
 export class NodeModuleRegistry {
   set(_resolvedKey, _namespace) { return }
@@ -12,4 +7,10 @@ export class NodeModuleRegistry {
   keys() { return }
   values() { return }
   entries() { return }
+}
+
+export class NodeModuleLoader {
+  registry = new NodeModuleRegistry()
+  import(_key, _parentKey?) { return }
+  resolve(_key, _parentKey?) { return }
 }
