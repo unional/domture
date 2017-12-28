@@ -4,14 +4,14 @@ import { createDomture } from './index'
 
 test('import cjs', async t => {
   const domture = await createDomture()
-  const makeError = await domture.import('make-error')
+  const makeError = await domture.nodeImport('make-error')
   t.is(typeof makeError, 'function')
 })
 
 test('import es6', async t => {
   const domture = await createDomture()
 
-  const globalStore = await domture.import('global-store')
+  const globalStore = await domture.nodeImport('global-store')
 
   t.is(typeof globalStore, 'object')
   t.is(globalStore.default.name, 'create')
@@ -20,7 +20,7 @@ test('import es6', async t => {
 test('import relative with default rootDir (".")', async t => {
   const domture = await createDomture()
 
-  const foo = await domture.import('./fixtures/cjs/foo.js')
+  const foo = await domture.nodeImport('./fixtures/cjs/foo.js')
   t.not(foo, undefined)
 })
 
@@ -28,7 +28,7 @@ test('import relative', async t => {
   const domture = await createDomture({
     rootDir: './fixtures/cjs'
   })
-  const foo = await domture.import('./index')
+  const foo = await domture.nodeImport('./index')
   t.is(typeof foo, 'function')
 })
 
@@ -43,7 +43,7 @@ test('fix missing main', async t => {
       }
     }
   })
-  const m = await domture.import('./index')
+  const m = await domture.nodeImport('./index')
   t.is(m.name, 'makeError')
 })
 
@@ -84,21 +84,21 @@ test('preload color-map script', async t => {
 test('import color-map module', async t => {
   const domture = await createDomture()
 
-  const colorMap = await domture.import('color-map')
+  const colorMap = await domture.nodeImport('color-map')
 
   t.not(colorMap, undefined)
 })
 
 test('import global-store script file should fill global namespace', async t => {
   const harness = await createDomture()
-  await harness.import('./node_modules/global-store/dist/global-store.es5.js')
+  await harness.loadScript('./node_modules/global-store/dist/global-store.es5.js')
 
   t.not(harness.window.GlobalStore, undefined)
 })
 
 test('import color-map script file should fill global namespace', async t => {
   const harness = await createDomture()
-  await harness.import(require.resolve('color-map/dist/color-map.es5.js'))
+  await harness.loadScript(require.resolve('color-map/dist/color-map.es5.js'))
 
   t.not(harness.window.ColorMap, undefined)
 })
@@ -229,11 +229,11 @@ test(`User metadata to override format detection`, async t => {
   t.not(domture.window.ColorMap, undefined)
 })
 
-test.only('support subfolder/index reference', async t => {
+test('support subfolder/index reference', async t => {
   const domture = await createDomture({
     rootDir: './fixtures/with-subfolder'
   })
 
-  const foo = await domture.import('./index')
+  const foo = await domture.nodeImport('./index')
   t.deepEqual(foo(), { value: 'foo' })
 })
