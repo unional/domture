@@ -4,14 +4,14 @@ import { createDomture } from './index'
 
 test('import cjs', async t => {
   const domture = await createDomture()
-  const makeError = await domture.nodeImport('make-error')
+  const makeError = await domture.import('make-error')
   t.is(typeof makeError, 'function')
 })
 
 test('import es6', async t => {
   const domture = await createDomture()
 
-  const globalStore = await domture.nodeImport('global-store')
+  const globalStore = await domture.import('global-store')
 
   t.is(typeof globalStore, 'object')
   t.is(globalStore.default.name, 'create')
@@ -20,46 +20,30 @@ test('import es6', async t => {
 test('import relative with default rootDir (".")', async t => {
   const domture = await createDomture()
 
-  const foo = await domture.nodeImport('./fixtures/cjs/foo.js')
+  const foo = await domture.import('./fixtures/cjs/foo.js')
   t.not(foo, undefined)
+  t.is(foo(), 'foo')
+
+  // the loaded version will be cached and returned
+  const foo2 = await domture.import('./fixtures/cjs/foo.js')
+  t.is(foo, foo2)
 })
 
 test('import relative', async t => {
   const domture = await createDomture({
     rootDir: './fixtures/cjs'
   })
-  const foo = await domture.nodeImport('./index')
+  const foo = await domture.import('./index')
   t.is(typeof foo, 'function')
 })
 
-test('fix missing main', async t => {
+
+test('work with requiring pakcage with missing main', async t => {
   const domture = await createDomture({
-    rootDir: './fixtures/fix-main',
-    systemjsConfig: {
-      packages: {
-        'make-error': {
-          main: 'index'
-        }
-      }
-    }
+    rootDir: './fixtures/fix-main'
   })
-  const m = await domture.nodeImport('./index')
+  const m = await domture.import('./index')
   t.is(m.name, 'makeError')
-})
-
-test('use map', async t => {
-  const domture = await createDomture({
-    rootDir: './fixtures/cjs',
-    systemjsConfig: {
-      map: {
-        'xyz': './fixtures/cjs/index'
-      }
-    }
-  })
-  const foo = await domture.import('xyz')
-  t.is(typeof foo, 'function')
-  const foo2 = await domture.import('./index')
-  t.is(foo, foo2)
 })
 
 test('preload script', async t => {
@@ -84,7 +68,7 @@ test('preload color-map script', async t => {
 test('import color-map module', async t => {
   const domture = await createDomture()
 
-  const colorMap = await domture.nodeImport('color-map')
+  const colorMap = await domture.import('color-map')
 
   t.not(colorMap, undefined)
 })
@@ -213,27 +197,11 @@ test(`loadScriptSync() with invalid path`, async t => {
   t.is(err.code, 'ENOENT')
 })
 
-test(`User metadata to override format detection`, async t => {
-  const domture = await createDomture({
-    rootDir: './fixtures/global-detection',
-    systemjsConfig: {
-      meta: {
-        'color-map.js': {
-          format: 'global'
-        }
-      }
-    }
-  })
-
-  await domture.import('./color-map.js')
-  t.not(domture.window.ColorMap, undefined)
-})
-
 test('support subfolder/index reference', async t => {
   const domture = await createDomture({
     rootDir: './fixtures/with-subfolder'
   })
 
-  const foo = await domture.nodeImport('./index')
+  const foo = await domture.import('./index')
   t.deepEqual(foo(), { value: 'foo' })
 })

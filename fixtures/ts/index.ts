@@ -1,2 +1,3 @@
-export * from './foo'
 export * from 'global-store'
+
+export * from './foo'

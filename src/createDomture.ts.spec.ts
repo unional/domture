@@ -33,24 +33,24 @@ test('with rootDir should still load packages', async t => {
 })
 
 test('import global script', async t => {
-  const harness = await createDomture({ transpiler: 'typescript' })
-  await harness.import('./fixtures/ts-global/MyCompany/component/TextBox')
-  const textBox = harness.window.MyCompany.component.TextBox
+  const domture = await createDomture({ transpiler: 'typescript' })
+  await domture.import('./fixtures/ts-global/MyCompany/component/TextBox')
+  const textBox = domture.window.MyCompany.component.TextBox
   t.deepEqual(textBox, { a: 1 })
 })
 
 test('import global script', async t => {
-  const harness = await createDomture({ transpiler: 'typescript' })
-  await harness.import('./fixtures/ts-global/MyCompany/component/TextBox')
-  const textBox = harness.window.MyCompany.component.TextBox
+  const domture = await createDomture({ transpiler: 'typescript' })
+  await domture.import('./fixtures/ts-global/MyCompany/component/TextBox')
+  const textBox = domture.window.MyCompany.component.TextBox
   t.deepEqual(textBox, { a: 1 })
 })
 
 test(`import global script with type`, async t => {
-  const harness = await createDomture({ transpiler: 'typescript' })
+  const domture = await createDomture({ transpiler: 'typescript' })
 
-  await harness.import('./fixtures/ts-global/MyCompany/component/foo')
-  const foo = harness.window.MyCompany.component.foo
+  await domture.import('./fixtures/ts-global/MyCompany/component/foo')
+  const foo = domture.window.MyCompany.component.foo
 
   t.deepEqual(foo, 'foo')
 })
@@ -58,8 +58,7 @@ test(`import global script with type`, async t => {
 test('load ts and js', async t => {
   const domture = await createDomture({
     rootDir: './fixtures/ts',
-    transpiler: 'typescript',
-    explicitExtension: true
+    transpiler: 'typescript'
   })
   const foo = await domture.import('./foo.ts')
   t.deepEqual(foo.foo(), { value: 'foo' })
@@ -83,7 +82,6 @@ test('preload scripts with js extension and explicitExtension true', async t => 
   const domture = await createDomture({
     rootDir: './fixtures/ts',
     transpiler: 'typescript',
-    explicitExtension: true,
     preloadScripts: [
       require.resolve('color-map/dist/color-map.es5.js')
     ]
@@ -94,8 +92,7 @@ test('preload scripts with js extension and explicitExtension true', async t => 
 test('support loading multiple extensions: ts and js', async t => {
   const domture = await createDomture({
     rootDir: './fixtures/ts',
-    transpiler: 'typescript',
-    moduleFileExtensions: ['ts', 'js']
+    transpiler: 'typescript'
   })
   const foo = await domture.import('./foo')
   t.deepEqual(foo.foo(), { value: 'foo' })
@@ -115,14 +112,13 @@ test('support loading multiple extensions: ts and tsx', async t => {
   t.is(typeof doo.render, 'function')
 })
 
-test.skip('support subfolder/index reference', async t => {
+test('support subfolder/index reference', async t => {
   const domture = await createDomture({
     rootDir: './fixtures/ts-with-subfolder',
     transpiler: 'typescript'
   })
 
   const foo = await domture.import('./index')
-  console.log('fo', foo)
   t.deepEqual(foo.foo(), { value: 'foo' })
 })
 

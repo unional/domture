@@ -3,18 +3,11 @@ import { JSDOM, DOMWindow, CookieJar, VirtualConsole } from 'jsdom'
 // re-export
 export { CookieJar, DOMWindow, VirtualConsole }
 
-type SystemJS = SystemJSLoader.System
-export { SystemJS }
-
 export interface Domture extends JSDOM {
   /**
    * Window and any global namespaces.
    */
   window: DOMWindow & { [index: string]: any }
-  /**
-   * SystemJS instance.
-   */
-  systemjs: SystemJSLoader.System
   /**
    * Import module or file.
    * If you are loading global script file,
@@ -24,13 +17,6 @@ export interface Domture extends JSDOM {
    * or relative path (`./src/logic`)
    */
   import<M = any>(identifier: string): Promise<M>
-
-  /**
-   * Import NodeJS modules or files.
-   * It will not alter global namespace and does not work with transpiler.
-   * But the Node resolution works.
-   */
-  nodeImport<M = any>(identifier: string): Promise<M>
 
   /**
    * Load a script through script tag.
