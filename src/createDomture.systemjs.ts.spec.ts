@@ -3,7 +3,10 @@ import { createDomture } from './index'
 
 
 test('import relative with default rootDir (".")', async t => {
-  const domture = await createDomture({ transpiler: 'typescript' })
+  const domture = await createDomture({
+    loader: 'systemjs',
+    transpiler: 'typescript'
+  })
 
   const config = await domture.import('./src/log')
   t.truthy(config)
@@ -11,6 +14,7 @@ test('import relative with default rootDir (".")', async t => {
 
 test('load ts', async t => {
   const domture = await createDomture({
+    loader: 'systemjs',
     rootDir: './fixtures/ts',
     transpiler: 'typescript'
   })
@@ -23,6 +27,7 @@ test('load ts', async t => {
 
 test('with rootDir should still load packages', async t => {
   const domture = await createDomture({
+    loader: 'systemjs',
     rootDir: './fixtures/ts',
     transpiler: 'typescript'
   })
@@ -33,21 +38,30 @@ test('with rootDir should still load packages', async t => {
 })
 
 test('import global script', async t => {
-  const harness = await createDomture({ transpiler: 'typescript' })
+  const harness = await createDomture({
+    loader: 'systemjs',
+    transpiler: 'typescript'
+  })
   await harness.import('./fixtures/ts-global/MyCompany/component/TextBox')
   const textBox = harness.window.MyCompany.component.TextBox
   t.deepEqual(textBox, { a: 1 })
 })
 
 test('import global script', async t => {
-  const harness = await createDomture({ transpiler: 'typescript' })
+  const harness = await createDomture({
+    loader: 'systemjs',
+    transpiler: 'typescript'
+  })
   await harness.import('./fixtures/ts-global/MyCompany/component/TextBox')
   const textBox = harness.window.MyCompany.component.TextBox
   t.deepEqual(textBox, { a: 1 })
 })
 
 test(`import global script with type`, async t => {
-  const harness = await createDomture({ transpiler: 'typescript' })
+  const harness = await createDomture({
+    loader: 'systemjs',
+    transpiler: 'typescript'
+  })
 
   await harness.import('./fixtures/ts-global/MyCompany/component/foo')
   const foo = harness.window.MyCompany.component.foo
@@ -57,6 +71,7 @@ test(`import global script with type`, async t => {
 
 test('preload scripts with js extension', async t => {
   const domture = await createDomture({
+    loader: 'systemjs',
     rootDir: './fixtures/ts',
     transpiler: 'typescript',
     preloadScripts: [
@@ -68,6 +83,7 @@ test('preload scripts with js extension', async t => {
 
 test('support loading multiple extensions: ts and js', async t => {
   const domture = await createDomture({
+    loader: 'systemjs',
     rootDir: './fixtures/ts',
     transpiler: 'typescript',
     moduleFileExtensions: ['ts', 'js']
@@ -81,6 +97,7 @@ test('support loading multiple extensions: ts and js', async t => {
 
 test('support loading multiple extensions: ts and tsx', async t => {
   const domture = await createDomture({
+    loader: 'systemjs',
     rootDir: './fixtures/tsx',
     transpiler: 'typescript'
   })
@@ -90,9 +107,10 @@ test('support loading multiple extensions: ts and tsx', async t => {
   t.is(typeof doo.render, 'function')
 })
 
-test.failing('support subfolder/index reference', async t => {
+test.skip('support subfolder/index reference', async t => {
   const domture = await createDomture({
-    rootDir: './fixtures/with-subfolder',
+    loader: 'systemjs',
+    rootDir: './fixtures/ts-with-subfolder',
     transpiler: 'typescript'
   })
 
