@@ -11,8 +11,7 @@
 
 You can load `npm` packages as well as local files (by default relative to current folder `.`).
 
-Under the hood it uses [`systemjs`](https://github.com/systemjs/systemjs) to do its magic.
-You can configure `systemjs` directly however you want.
+Under the hood, it bundles the files you tries to import with `webpack` and load them into `jsdom` through script tags.
 
 ## Usage
 
@@ -38,30 +37,6 @@ test('customize', async t => {
     preloadScripts: ['a-package', './someCode.js', './index'],
     // Able to load TypeScript code directly
     transpiler: 'typescript',
-    // Need to do `./index.ts` or `./index.js`.
-    // Useful when you need to load both types.
-    // Deprecated. Use `moduleFileExtensions` instead.
-    explicitExtension: true,
-    // Indicates which extension to try during `import()`
-    // This is needed only if you need to do something special,
-    // e.g. `allowJs` with TypeScirpt project.
-    // By default, `domture` will look for 'js' and 'jsx` for JavaScript projects,
-    // 'ts', 'tsx' for TypeScript projects.
-    moduleFileExtensions: ['ts', 'js']
-    systemjsConfig: {
-      packages: {
-        // This is need for some packages due to https://github.com/systemjs/systemjs/issues/1603
-        'make-error': {
-          main: 'index'
-        }
-      },
-      meta: {
-        // Do this if `some-global-script.js` is not detected correctly as global script when using `import()`.
-        'some-global-script.js': {
-          format: 'global'
-        }
-      }
-    },
     // configure jsdom.
     // Can't set `url` and `runScripts`.
     // They are used internally.
