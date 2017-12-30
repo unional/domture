@@ -40,7 +40,7 @@ function extendJSDOM(dom: JSDOM, config: DomtureConfig): Domture {
     const varID = `__domture__${camelCase(identifier)}`
     const filename = `${varID}.js`
     const filePath = `/${filename}`
-    if (memfs.existsSync(filePath))
+    if (result.window[varID])
       return Promise.resolve(result.window[varID])
 
     const webpackOptions = getWebpackOptions()
