@@ -11,7 +11,7 @@
 
 You can load `npm` packages as well as local files (by default relative to current folder `.`).
 
-Under the hood, it bundles the files you tries to import with `webpack` and load them into `jsdom` through script tags.
+Under the hood, it bundles the files you try to import with `webpack` and load them into `jsdom` through script tags.
 
 ## Usage
 
