@@ -22,6 +22,11 @@ test('import relative with default rootDir (".")', async t => {
 
   const foo = await domture.import('./fixtures/cjs/foo.js')
   t.not(foo, undefined)
+  t.is(foo(), 'foo')
+
+  // the loaded version will be cached and returned
+  const foo2 = await domture.import('./fixtures/cjs/foo.js')
+  t.is(foo, foo2)
 })
 
 test('import relative', async t => {
@@ -32,34 +37,13 @@ test('import relative', async t => {
   t.is(typeof foo, 'function')
 })
 
-test('fix missing main', async t => {
+
+test('work with requiring pakcage with missing main', async t => {
   const domture = await createDomture({
-    rootDir: './fixtures/fix-main',
-    systemjsConfig: {
-      packages: {
-        'make-error': {
-          main: 'index'
-        }
-      }
-    }
+    rootDir: './fixtures/fix-main'
   })
   const m = await domture.import('./index')
   t.is(m.name, 'makeError')
-})
-
-test('use map', async t => {
-  const domture = await createDomture({
-    rootDir: './fixtures/cjs',
-    systemjsConfig: {
-      map: {
-        'xyz': './fixtures/cjs/index'
-      }
-    }
-  })
-  const foo = await domture.import('xyz')
-  t.is(typeof foo, 'function')
-  const foo2 = await domture.import('./index')
-  t.is(foo, foo2)
 })
 
 test('preload script', async t => {
@@ -91,14 +75,14 @@ test('import color-map module', async t => {
 
 test('import global-store script file should fill global namespace', async t => {
   const harness = await createDomture()
-  await harness.import('./node_modules/global-store/dist/global-store.es5.js')
+  await harness.loadScript('./node_modules/global-store/dist/global-store.es5.js')
 
   t.not(harness.window.GlobalStore, undefined)
 })
 
 test('import color-map script file should fill global namespace', async t => {
   const harness = await createDomture()
-  await harness.import(require.resolve('color-map/dist/color-map.es5.js'))
+  await harness.loadScript(require.resolve('color-map/dist/color-map.es5.js'))
 
   t.not(harness.window.ColorMap, undefined)
 })
@@ -213,18 +197,11 @@ test(`loadScriptSync() with invalid path`, async t => {
   t.is(err.code, 'ENOENT')
 })
 
-test(`User metadata to override format detection`, async t => {
+test('support subfolder/index reference', async t => {
   const domture = await createDomture({
-    rootDir: './fixtures/global-detection',
-    systemjsConfig: {
-      meta: {
-        'color-map.js': {
-          format: 'global'
-        }
-      }
-    }
+    rootDir: './fixtures/with-subfolder'
   })
 
-  await domture.import('./color-map.js')
-  t.not(domture.window.ColorMap, undefined)
+  const foo = await domture.import('./index')
+  t.deepEqual(foo(), { value: 'foo' })
 })

@@ -7,13 +7,13 @@ notifications:
   email: false
 
 node_js:
-  - "stable"
+  - '9'
   - '8'
-  - '6'
 
 branches:
   only:
     - master
+    - next
     - /^greenkeeper.*$/
 
 before_install:

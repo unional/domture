@@ -4,7 +4,13 @@
 			"path": "."
 		},
 		{
-			"path": "/Users/hwong/github/unional/systemjs-plugin-domture"
+			"path": "../systemjs-plugin-domture"
+		},
+		{
+			"path": "../../systemjs/systemjs"
+		},
+		{
+			"path": "../systemjs-plugin-node"
 		}
 	],
 	"settings": {

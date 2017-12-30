@@ -1,6 +1,6 @@
 {
   "name": "domture",
-  "description": "Test fixture with jsdom + SystemJS + Node",
+  "description": "load packages and scripts on jsdom",
   "version": "0.0.0-development",
   "main": "dist-es5/index.js",
   "module": "dist-es2015/index.js",
@@ -16,7 +16,7 @@
     "build-es5": "tsc -p tsconfig.es5.json",
     "clean": "rimraf dist dist-es5 dist-es2015",
     "dc": "npm run dependency-check",
-    "dependency-check": "dependency-check . --unused --no-dev -i plugin-typescript -i systemjs -i @types/systemjs -i @types/jsdom -i systemjs-plugin-domture && dependency-check . --missing --no-dev",
+    "dependency-check": "dependency-check . --unused --no-dev -i plugin-typescript -i ts-loader -i systemjs -i systemjs-plugin-domture -i @types/systemjs -i @types/jsdom && dependency-check . --missing --no-dev",
     "lint": "tslint -p tsconfig.json 'src/**/*.ts'",
     "prepublishOnly": "npm run build",
     "verify": "npm run lint && npm run coverage && npm run dependency-check",
@@ -25,7 +25,7 @@
     "remove-spec": "rimraf dist-es5/**/*.spec.*",
     "test": "npm run clean && tsc && ava",
     "watch": "npm run clean && node scripts/watch.js",
-    "semantic-release": "semantic-release pre && npm publish && semantic-release post"
+    "semantic-release": "semantic-release"
   },
   "author": {
     "name": "Homa Wong",
@@ -62,30 +62,22 @@
       "**/fixtures/**/*"
     ]
   },
-  "release": {
-    "analyzeCommits": {
-      "releaseRules": [
-        {
-          "breaking": true,
-          "release": "minor"
-        }
-      ]
-    }
-  },
   "devDependencies": {
-    "@types/node": "^8.0.54",
-    "aurelia-logging-color": "^0.5.11",
+    "@types/memory-fs": "^0.3.0",
+    "@types/node": "^8.5.2",
+    "@types/webpack": "^3.8.1",
+    "aurelia-logging-color": "^0.5.12",
     "ava": "^0.24.0",
     "color-map": "^0.5.11",
-    "dependency-check": "^2.9.1",
-    "eslint": "^4.12.1",
+    "dependency-check": "^2.9.2",
+    "eslint": "^4.14.0",
     "eslint-config-unional": "^0.2.3",
     "global-store": "^0.7.2",
-    "make-error": "^1.3.0",
-    "nyc": "^11.4.0",
+    "make-error": "^1.3.2",
+    "nyc": "^11.4.1",
     "rimraf": "^2.6.2",
-    "semantic-release": "^8.2.3",
-    "ts-node": "^4.0.0",
+    "semantic-release": "^11.1.0",
+    "ts-node": "^4.1.0",
     "tslint": "^5.8.0",
     "tslint-config-unional": "^0.8.0",
     "typescript": "^2.6.2"
@@ -93,12 +85,16 @@
   "dependencies": {
     "@types/jsdom": "^11.0.4",
     "@types/systemjs": "^0.20.6",
-    "@unional/logging": "^0.2.3",
+    "@unional/logging": "^0.2.5",
+    "camel-case": "^3.0.0",
     "file-url": "^2.0.2",
     "jsdom": "^11.5.1",
+    "memory-fs": "^0.4.1",
     "plugin-typescript": "^8.0.0",
     "systemjs": "^0.20.19",
-    "systemjs-plugin-domture": "^0.1.1",
-    "unpartial": "^0.4.1"
+    "systemjs-plugin-domture": "^0.1.2",
+    "ts-loader": "^3.2.0",
+    "unpartial": "^0.4.1",
+    "webpack": "^3.10.0"
   }
 }

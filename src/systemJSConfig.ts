@@ -1,6 +1,6 @@
 import { unpartialRecursively } from 'unpartial'
 
-import { DomtureConfig } from './config'
+import { SystemJSDomtureConfig } from './config'
 
 const packageManagers = {
   npm() {
@@ -78,16 +78,13 @@ const transpilerBuilders = {
   }
 }
 
-export function toSystemJSConfig(config: DomtureConfig) {
+export function toSystemJSConfig(config: SystemJSDomtureConfig) {
   const { systemjsConfig = {} } = config
   let sys: any = packageManagers[config.packageManager]()
 
   sys = unpartialRecursively(sys, transpilerBuilders[config.transpiler](config.rootDir))
   sys = unpartialRecursively(sys, systemjsConfig)
   fixMeta(sys, systemjsConfig.meta)
-
-  if (config.explicitExtension)
-    sys.packages.app.defaultExtension = ''
 
   return sys
 }

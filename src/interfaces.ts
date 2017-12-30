@@ -11,10 +11,7 @@ export interface Domture extends JSDOM {
    * Window and any global namespaces.
    */
   window: DOMWindow & { [index: string]: any }
-  /**
-   * SystemJS instance.
-   */
-  systemjs: SystemJSLoader.System
+
   /**
    * Import module or file.
    * If you are loading global script file,
@@ -35,4 +32,10 @@ export interface Domture extends JSDOM {
    * (so obviously, it can't be typescript)
    */
   loadScriptSync(identifier: string): void
+}
+export interface SystemJSDomture extends Domture {
+  /**
+   * SystemJS instance. Only for `loader: 'systemjs'`
+   */
+  systemjs: SystemJSLoader.System
 }

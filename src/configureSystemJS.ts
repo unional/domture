@@ -1,5 +1,6 @@
 import { log } from './log'
-import { toSystemJSConfig } from './systemjsConfig'
+import { toSystemJSConfig } from './systemJSConfig'
+import { isRelative } from './util';
 
 export function configureSystemJS(domture, config) {
   const sysConfig = toSystemJSConfig(config)
@@ -17,8 +18,4 @@ export function configureSystemJS(domture, config) {
 
 export function toSystemJSModuleName(identifier: string) {
   return isRelative(identifier) ? identifier.replace('.', 'app') : identifier
-}
-
-function isRelative(identifier: string) {
-  return identifier.indexOf('.') === 0
 }
