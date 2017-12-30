@@ -16,7 +16,7 @@
     "build-es5": "tsc -p tsconfig.es5.json",
     "clean": "rimraf dist dist-es5 dist-es2015",
     "dc": "npm run dependency-check",
-    "dependency-check": "dependency-check . --unused --no-dev -i plugin-typescript -i ts-loader -i @types/jsdom -i && dependency-check . --missing --no-dev",
+    "dependency-check": "dependency-check . --unused --no-dev -i plugin-typescript -i ts-loader -i systemjs -i systemjs-plugin-domture -i @types/systemjs -i @types/jsdom && dependency-check . --missing --no-dev",
     "lint": "tslint -p tsconfig.json 'src/**/*.ts'",
     "prepublishOnly": "npm run build",
     "verify": "npm run lint && npm run coverage && npm run dependency-check",
@@ -62,20 +62,6 @@
       "**/fixtures/**/*"
     ]
   },
-  "release": {
-    "analyzeCommits": {
-      "releaseRules": [
-        {
-          "breaking": true,
-          "release": "minor"
-        }
-      ]
-    },
-    "branch": "next"
-  },
-  "publishConfig": {
-    "tag": "next"
-  },
   "devDependencies": {
     "@types/memory-fs": "^0.3.0",
     "@types/node": "^8.5.2",
@@ -98,12 +84,15 @@
   },
   "dependencies": {
     "@types/jsdom": "^11.0.4",
+    "@types/systemjs": "^0.20.6",
     "@unional/logging": "^0.2.5",
     "camel-case": "^3.0.0",
     "file-url": "^2.0.2",
     "jsdom": "^11.5.1",
     "memory-fs": "^0.4.1",
     "plugin-typescript": "^8.0.0",
+    "systemjs": "^0.20.19",
+    "systemjs-plugin-domture": "^0.1.2",
     "ts-loader": "^3.2.0",
     "unpartial": "^0.4.1",
     "webpack": "^3.10.0"

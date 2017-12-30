@@ -9,9 +9,19 @@
 
 `domture` allows you to load packages and scripts directly on a `jsdom` instance for testing purpose.
 
-You can load `npm` packages as well as local files (by default relative to current folder `.`).
+You can load `npm` packages as well as local files (by default relative to current working directory `.`).
 
-Under the hood, it bundles the files you try to import with `webpack` and load them into `jsdom` through script tags.
+`domture` supports two loaders: `systemjs` and `webpack`.
+
+When using `systemjs`, it leveages `systemjs` magic to load any type of module files.
+However, certain NodeJS resolution does not work currently, and also code coverage is not available.
+
+When using `webpack`, it bundles the files you try to import with `webpack` and load them into `jsdom` through script tags.
+The NodeJS resolution is complete and code coverage is (will be) available.
+However, additional bundle time is needed and bundles management still need to be planned out and implemented in the future.
+You also lost the magic from `systemjs`.
+
+By default, `webpack` will be used as the default loader.
 
 ## Usage
 
@@ -41,6 +51,32 @@ test('customize', async t => {
     // Can't set `url` and `runScripts`.
     // They are used internally.
     jsdomConstructorOptions: { ... }
+  })
+})
+
+test('use systemjs as loader', async t => {
+  const domture = await createDomture({
+    loader: 'systemjs',
+    // Indicates which extension to try during `import()`
+    // This is needed only if you need to do something special,
+    // e.g. `allowJs` with TypeScirpt project.
+    // By default, `domture` will look for 'js' and 'jsx` for JavaScript projects,
+    // 'ts', 'tsx' for TypeScript projects.
+    moduleFileExtensions: ['ts', 'js']
+    systemjsConfig: {
+      packages: {
+        // This is need for some packages due to https://github.com/systemjs/systemjs/issues/1603
+        'make-error': {
+          main: 'index'
+        }
+      },
+      meta: {
+        // Do this if `some-global-script.js` is not detected correctly as global script when using `import()`.
+        'some-global-script.js': {
+          format: 'global'
+        }
+      }
+    }
   })
 })
 ```

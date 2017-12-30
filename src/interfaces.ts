@@ -3,11 +3,15 @@ import { JSDOM, DOMWindow, CookieJar, VirtualConsole } from 'jsdom'
 // re-export
 export { CookieJar, DOMWindow, VirtualConsole }
 
+type SystemJS = SystemJSLoader.System
+export { SystemJS }
+
 export interface Domture extends JSDOM {
   /**
    * Window and any global namespaces.
    */
   window: DOMWindow & { [index: string]: any }
+
   /**
    * Import module or file.
    * If you are loading global script file,
@@ -28,4 +32,10 @@ export interface Domture extends JSDOM {
    * (so obviously, it can't be typescript)
    */
   loadScriptSync(identifier: string): void
+}
+export interface SystemJSDomture extends Domture {
+  /**
+   * SystemJS instance. Only for `loader: 'systemjs'`
+   */
+  systemjs: SystemJSLoader.System
 }
