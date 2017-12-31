@@ -1,7 +1,8 @@
 import { JSDOM, DOMWindow, CookieJar, VirtualConsole } from 'jsdom'
+import { MarkupData } from 'parse5'
 
 // re-export
-export { CookieJar, DOMWindow, VirtualConsole }
+export { CookieJar, DOMWindow, VirtualConsole, MarkupData }
 
 type SystemJS = SystemJSLoader.System
 export { SystemJS }
