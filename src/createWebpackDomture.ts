@@ -1,14 +1,15 @@
-import camelCase = require('camel-case')
 import { JSDOM, ConstructorOptions } from 'jsdom'
 import MemoryFS = require('memory-fs')
 import path = require('path')
+import { unpartial } from 'unpartial'
 import webpack = require('webpack')
 
 import { WebpackDomtureConfig } from './config'
+import { extendJSDOM } from './extendJSDOM'
+import { Domture } from './interfaces'
 import { log } from './log'
-import { injectScriptTag, url, extendJSDOM, isRelative, preloadScripts } from './util'
-import { unpartial } from 'unpartial';
-import { Domture } from './interfaces';
+import { toVarID } from './support'
+import { injectScriptTag, url, isRelative, preloadScripts, toNamespace } from './util'
 
 export async function createWebpackDomture(config: WebpackDomtureConfig): Promise<Domture> {
   const dom = createWebpackJSDOM(config.jsdomConstructorOptions)
@@ -31,34 +32,38 @@ function createWebpackJSDOM(givenOptions: Partial<ConstructorOptions> = {}) {
 function mixWebpack(jsdom: JSDOM, config: WebpackDomtureConfig) {
   const memfs = new MemoryFS()
 
-  const result = jsdom as any
-  result.import = function (identifier: string) {
-    const varID = `__domture__${camelCase(identifier)}`
+  const domture = jsdom as any
+  domture.import = function (identifier: string) {
+    const varID = toVarID(identifier)
     const filename = `${varID}.js`
     const filePath = `/${filename}`
-    if (result.window[varID])
-      return Promise.resolve(result.window[varID])
+    if (domture.window[varID])
+      return Promise.resolve(domture.window[varID])
 
     const webpackOptions = getWebpackOptions()
     return new Promise<string>((a, r) => {
       const compiler = webpack(webpackOptions)
       compiler.outputFileSystem = memfs
       compiler.run((err, stats) => {
-        if (err)
-          r(err)
-        else if (stats.hasErrors()) {
-          r(stats.toJson().errors)
-        }
+        if (err) r(err)
+        else if (stats.hasErrors()) r(stats.toJson().errors)
         else {
-          if (stats.hasWarnings())
-            log.warn(stats.toJson().warnings)
+          if (stats.hasWarnings()) log.warn(stats.toJson().warnings)
           const content = memfs.readFileSync(filePath, 'utf8')
           a(content)
         }
       })
     }).then(source => {
-      injectScriptTag(result.window, source)
-      return result.window[varID]
+      injectScriptTag(domture.window, source)
+      let globalDomtureValue = domture.window[varID]
+      if (typeof globalDomtureValue === 'object' && Object.keys(globalDomtureValue).length === 0) {
+        const ns = toNamespace(identifier)
+        const globalValue = domture.getByNamespace(ns)
+        if (globalValue !== undefined)
+          globalDomtureValue = domture.window[varID] = globalValue
+      }
+
+      return globalDomtureValue
     })
 
     function getWebpackOptions() {
