@@ -91,7 +91,6 @@
     "file-url": "^2.0.2",
     "jsdom": "^11.5.1",
     "memory-fs": "^0.4.1",
-    "param-case": "^2.1.1",
     "plugin-typescript": "^8.0.0",
     "systemjs": "^0.20.19",
     "systemjs-plugin-domture": "^0.1.2",
