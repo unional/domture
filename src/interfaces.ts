@@ -14,6 +14,12 @@ export interface Domture extends JSDOM {
   window: DOMWindow & { [index: string]: any }
 
   /**
+   * Get the specified target from global namespace.
+   * @param ns Path to the target, e.g. 'MyCompany.MyProduct.MyComponent'
+   */
+  get(ns: string): any
+
+  /**
    * Import module or file.
    * If you are loading global script file,
    * sometimes this does not work properly because `systemjs` incorrectly detect the file as `amd` or `cjs`.
@@ -28,6 +34,7 @@ export interface Domture extends JSDOM {
    * (so obviously, it can't be typescript)
    */
   loadScript(identifier: string): Promise<void>
+
   /**
    * Load a script through script tag.
    * (so obviously, it can't be typescript)

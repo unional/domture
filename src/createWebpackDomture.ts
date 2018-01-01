@@ -58,7 +58,7 @@ function mixWebpack(jsdom: JSDOM, config: WebpackDomtureConfig) {
       let globalDomtureValue = domture.window[varID]
       if (typeof globalDomtureValue === 'object' && Object.keys(globalDomtureValue).length === 0) {
         const ns = toNamespace(identifier)
-        const globalValue = domture.getByNamespace(ns)
+        const globalValue = domture.get(ns)
         if (globalValue !== undefined)
           globalDomtureValue = domture.window[varID] = globalValue
       }
