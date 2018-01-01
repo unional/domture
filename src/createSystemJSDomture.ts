@@ -1,13 +1,13 @@
 import fs = require('fs')
 import { JSDOM, ConstructorOptions } from 'jsdom'
-
+import { unpartial } from 'unpartial'
 
 import { SystemJSDomtureConfig } from './config'
 import { toSystemJSModuleName, configureSystemJS } from './configureSystemJS'
+import { extendJSDOM } from './extendJSDOM'
+import { SystemJSDomture } from './interfaces'
 import { log } from './log'
-import { SystemJSDomture } from './interfaces';
-import { extendJSDOM, url, preloadScripts } from './util';
-import { unpartial } from 'unpartial';
+import { url, preloadScripts } from './util'
 
 export async function createSystemJSDomture(config: SystemJSDomtureConfig): Promise<SystemJSDomture> {
   const dom = createSystemJSJSDOM(config.jsdomConstructorOptions)

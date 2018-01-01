@@ -87,6 +87,7 @@
     "@types/systemjs": "^0.20.6",
     "@unional/logging": "^0.2.5",
     "camel-case": "^3.0.0",
+    "dot-case": "^2.1.1",
     "file-url": "^2.0.2",
     "jsdom": "^11.5.1",
     "memory-fs": "^0.4.1",

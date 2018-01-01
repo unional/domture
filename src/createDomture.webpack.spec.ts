@@ -205,3 +205,27 @@ test('support subfolder/index reference', async t => {
   const foo = await domture.import('./index')
   t.deepEqual(foo(), { value: 'foo' })
 })
+
+test('importing global file should try to get the value using namespaces when it exports nothing', async t => {
+  const domture = await createDomture({
+    rootDir: './fixtures/global'
+  })
+
+  let foo = await domture.import('./foo')
+  t.deepEqual(foo, { a: 1 })
+
+  let foo2 = await domture.import('./foo.js')
+  t.deepEqual(foo2, { a: 1 })
+})
+
+test('importing nested global file should try to get the value using namespaces when it exports nothing', async t => {
+  const domture = await createDomture({
+    rootDir: './fixtures/global'
+  })
+
+  let boo = await domture.import('./comp/boo')
+  t.deepEqual(boo, { a: 2 })
+
+  let boo2 = await domture.import('./comp/boo.js')
+  t.deepEqual(boo2, { a: 2 })
+})

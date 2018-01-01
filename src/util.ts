@@ -1,27 +1,15 @@
+import dotCase = require('dot-case')
 import fileUrl = require('file-url')
 import fs = require('fs')
 import path = require('path')
-import { DOMWindow, JSDOM } from 'jsdom'
-import { Domture } from './interfaces';
-import { DomtureConfig } from './config';
+import { DOMWindow } from 'jsdom'
+import { trimFileExtension } from './support';
 
 export const url = fileUrl(process.cwd()) + '/'
 
 export function preloadScripts(dom, preloadScripts, rootDir) {
   if (preloadScripts) {
     preloadScripts.forEach(s => loadScriptSync(dom.window, rootDir, s))
-  }
-}
-
-export function extendJSDOM(dom: JSDOM, config: DomtureConfig) {
-  const result = dom as any
-
-  result.loadScript = function (this: Domture, identifier: string) {
-    return loadScript(this.window, config.rootDir, identifier)
-  }
-
-  result.loadScriptSync = function (this: Domture, identifier: string) {
-    loadScriptSync(this.window, config.rootDir, identifier)
   }
 }
 
@@ -67,4 +55,22 @@ export function injectScriptTag(window: DOMWindow, scriptContent: string) {
 
 export function isRelative(id: string) {
   return id.startsWith('.')
+}
+
+export function getNamespace(root: any, path: string) {
+  const nodes = path.split(/[.\/]/);
+
+  let m = root[nodes[0]];
+  for (let j = 1, len = nodes.length; j < len; j++) {
+    if (!m) {
+      break;
+    }
+    const node = nodes[j];
+    m = m[node];
+  }
+  return m;
+}
+export function toNamespace(identifier: string) {
+  const id = trimFileExtension(identifier)
+  return dotCase(id)
 }
