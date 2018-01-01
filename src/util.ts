@@ -1,4 +1,3 @@
-import dotCase = require('dot-case')
 import fileUrl = require('file-url')
 import fs = require('fs')
 import path = require('path')
@@ -71,6 +70,11 @@ export function getNamespace(root: any, path: string) {
   return m;
 }
 export function toNamespace(identifier: string) {
-  const id = trimFileExtension(identifier)
-  return dotCase(id)
+  let id = trimFileExtension(identifier)
+  if (isRelative(identifier)) {
+    // this is naive and only supprot './abc',
+    // but that's probably all we need
+    id = id.slice(2)
+  }
+  return id.replace(/\//g, '.')
 }
