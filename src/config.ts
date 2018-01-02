@@ -32,7 +32,7 @@ export interface SystemJSDomtureConfig extends DomtureConfigBase {
 
 export type DomtureConfig = WebpackDomtureConfig | SystemJSDomtureConfig
 
-export const defaultConfig: DomtureConfig = {
+export const defaultConfig: WebpackDomtureConfig = {
   loader: 'webpack',
   packageManager: 'npm',
   rootDir: '.',
