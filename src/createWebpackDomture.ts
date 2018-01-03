@@ -41,7 +41,7 @@ function mixWebpack(jsdom: JSDOM, config: WebpackDomtureConfig) {
   if (config.transpiler === 'typescript') {
     webpackOptions.devtool = 'source-map'
     if (webpackOptions.resolve && webpackOptions.resolve.extensions) {
-      webpackOptions.resolve.extensions = uniq(webpackOptions.resolve.extensions.push('.ts', '.tsx', '.js', '.jsx'))
+      webpackOptions.resolve.extensions = uniq(webpackOptions.resolve.extensions.concat(['.ts', '.tsx', '.js', '.jsx']))
     }
     else
       webpackOptions.resolve = {
