@@ -16,7 +16,7 @@
     "build-es5": "tsc -p tsconfig.es5.json",
     "clean": "rimraf dist dist-es5 dist-es2015",
     "dc": "npm run dependency-check",
-    "dependency-check": "dependency-check . --unused --no-dev -i plugin-typescript -i ts-loader -i systemjs -i systemjs-plugin-domture -i @types/systemjs -i @types/jsdom -i @types/webpack && dependency-check . --missing --no-dev",
+    "dependency-check": "dependency-check . --unused --no-dev -i istanbul-instrumenter-loader -i plugin-typescript -i ts-loader -i systemjs -i systemjs-plugin-domture -i @types/systemjs -i @types/jsdom -i @types/webpack && dependency-check . --missing --no-dev",
     "lint": "tslint -p tsconfig.json 'src/**/*.ts'",
     "prepublishOnly": "npm run build",
     "verify": "npm run lint && npm run coverage && npm run dependency-check",
