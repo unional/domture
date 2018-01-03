@@ -1,6 +1,7 @@
 import { ConstructorOptions } from 'jsdom'
-type SystemJSConfig = SystemJSLoader.Config
+import webpack = require('webpack')
 
+type SystemJSConfig = SystemJSLoader.Config
 export { SystemJSConfig }
 
 export type Transpiler = 'none' | 'typescript'
@@ -18,7 +19,8 @@ export interface DomtureConfigBase {
 }
 
 export interface WebpackDomtureConfig extends DomtureConfigBase {
-  loader: 'webpack'
+  loader: 'webpack',
+  webpackConfig?: webpack.Configuration
 }
 
 export interface SystemJSDomtureConfig extends DomtureConfigBase {

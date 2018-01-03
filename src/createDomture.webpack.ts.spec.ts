@@ -130,3 +130,23 @@ test('project', async t => {
   const p = await domture.import('./index')
   t.deepEqual(p.foo(), { value: 'foo' })
 })
+
+test('config webpack directly', async t => {
+  const domture = await createDomture({
+    rootDir: './fixtures/ts',
+    transpiler: 'typescript',
+    webpackConfig: {
+      module: {
+        rules: [{
+          test: /\.ts$/,
+          use: {
+            loader: 'istanbul-instrumenter-loader'
+          }
+        }]
+      }
+    }
+  })
+
+  const foo = await domture.import('./foo')
+  t.deepEqual(foo.foo(), { value: 'foo' })
+})

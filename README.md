@@ -53,8 +53,18 @@ test('customize', async t => {
     jsdomConstructorOptions: { ... }
   })
 })
+test('customize with webpack', async t => {
+  const domture = await createDomture({
+    /**
+     * devtool, entry, and output are preserved
+     */
+    webpackConfig: {
+      // ...
+    }
+  })
+})
 
-test('use systemjs as loader', async t => {
+test('customize with systemjs', async t => {
   const domture = await createDomture({
     loader: 'systemjs',
     // Indicates which extension to try during `import()`

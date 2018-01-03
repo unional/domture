@@ -229,3 +229,40 @@ test('importing nested global file should try to get the value using namespaces 
   let boo2 = await domture.import('./comp/boo.js')
   t.deepEqual(boo2, { a: 2 })
 })
+
+test('config webpack devtool, entry, output will throw', async t => {
+  await t.throws(createDomture({
+    webpackConfig: {
+      devtool: 'source-map'
+    }
+  }))
+  await t.throws(createDomture({
+    webpackConfig: {
+      entry: './src/index'
+    }
+  }))
+  await t.throws(createDomture({
+    webpackConfig: {
+      output: {}
+    }
+  }))
+})
+
+test('config webpack directly', async t => {
+  const domture = await createDomture({
+    rootDir: './fixtures/cjs',
+    webpackConfig: {
+      module: {
+        rules: [{
+          test: /\.js$/,
+          use: {
+            loader: 'istanbul-instrumenter-loader'
+          }
+        }]
+      }
+    }
+  })
+
+  const foo = await domture.import('./index')
+  t.is(foo(), 'foo')
+})

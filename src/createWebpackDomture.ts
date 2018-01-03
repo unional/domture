@@ -1,6 +1,7 @@
 import { JSDOM, ConstructorOptions } from 'jsdom'
 import MemoryFS = require('memory-fs')
 import path = require('path')
+import uniq = require('lodash.uniq')
 import { unpartial } from 'unpartial'
 import webpack = require('webpack')
 
@@ -27,11 +28,49 @@ function createWebpackJSDOM(givenOptions: Partial<ConstructorOptions> = {}) {
   })
   return new JSDOM('', options)
 }
-
+function validateWebpackConfig(config: webpack.Configuration | undefined) {
+  if (!config) return
+  if (config.entry || config.output || config.devtool)
+    throw new Error(`webpack config 'entry', 'output', 'devtool' are reserved`)
+}
 
 function mixWebpack(jsdom: JSDOM, config: WebpackDomtureConfig) {
-  const memfs = new MemoryFS()
+  validateWebpackConfig(config.webpackConfig)
 
+  const webpackOptions = config.webpackConfig || {}
+  if (config.transpiler === 'typescript') {
+    webpackOptions.devtool = 'source-map'
+    if (webpackOptions.resolve && webpackOptions.resolve.extensions) {
+      webpackOptions.resolve.extensions = uniq(webpackOptions.resolve.extensions.concat(['.ts', '.tsx', '.js', '.jsx']))
+    }
+    else
+      webpackOptions.resolve = {
+        ...webpackOptions.resolve,
+        extensions: ['.ts', '.tsx', '.js', '.jsx']
+      }
+    if (webpackOptions.module && webpackOptions.module['rules']) {
+      webpackOptions.module['rules'].push({
+        test: /\.tsx?$/,
+        loader: 'ts-loader',
+        options: {
+          transpileOnly: true
+        }
+      })
+    }
+    else
+      webpackOptions.module = {
+        ...webpackOptions.module,
+        rules: [{
+          test: /\.tsx?$/,
+          loader: 'ts-loader',
+          options: {
+            transpileOnly: true
+          }
+        }]
+      }
+  }
+
+  const memfs = new MemoryFS()
   const domture = jsdom as any
   domture.import = function (identifier: string) {
     const varID = toVarID(identifier)
@@ -40,9 +79,8 @@ function mixWebpack(jsdom: JSDOM, config: WebpackDomtureConfig) {
     if (domture.window[varID])
       return Promise.resolve(domture.window[varID])
 
-    const webpackOptions = getWebpackOptions()
     return new Promise<string>((a, r) => {
-      const compiler = webpack(webpackOptions)
+      const compiler = webpack(getWebpackOptions())
       compiler.outputFileSystem = memfs
       compiler.run((err, stats) => {
         if (err) r(err)
@@ -67,32 +105,15 @@ function mixWebpack(jsdom: JSDOM, config: WebpackDomtureConfig) {
     })
 
     function getWebpackOptions() {
-      const options: webpack.Configuration = {
-        entry: config.transpiler === 'typescript' ?
-          resolveTSID(config.rootDir, identifier) :
-          resolveID(config.rootDir, identifier),
-        output: {
-          path: '/',
-          filename,
-          library: varID
-        }
+      webpackOptions.entry = config.transpiler === 'typescript' ?
+        resolveTSID(config.rootDir, identifier) :
+        resolveID(config.rootDir, identifier)
+      webpackOptions.output = {
+        path: '/',
+        filename,
+        library: varID
       }
-      if (config.transpiler === 'typescript') {
-        options.devtool = 'source-map'
-        options.resolve = {
-          extensions: ['.ts', '.tsx', '.js', '.jsx']
-        }
-        options.module = {
-          rules: [{
-            test: /\.tsx?$/,
-            loader: 'ts-loader',
-            options: {
-              transpileOnly: true
-            }
-          }]
-        }
-      }
-      return options
+      return webpackOptions
     }
   }
 }
