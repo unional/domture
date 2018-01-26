@@ -67,7 +67,7 @@
     "@types/memory-fs": "^0.3.0",
     "@types/node": "^9.3.0",
     "aurelia-logging-color": "^0.5.12",
-    "ava": "^0.24.0",
+    "ava": "^0.25.0",
     "color-map": "^1.0.0",
     "dependency-check": "^3.0.0",
     "eslint": "^4.14.0",
