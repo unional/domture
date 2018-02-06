@@ -94,7 +94,7 @@
     "lodash.uniq": "^4.5.0",
     "memory-fs": "^0.4.1",
     "plugin-typescript": "^8.0.0",
-    "systemjs": "^0.20.19",
+    "systemjs": "^0.21.0",
     "systemjs-plugin-domture": "^0.1.2",
     "ts-loader": "^3.2.0",
     "unpartial": "^0.4.1",
