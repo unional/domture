@@ -13,7 +13,7 @@ import { toVarID } from './support'
 import { injectScriptTag, url, isRelative, preloadScripts, toNamespace } from './util'
 
 export async function createWebpackDomture(config: WebpackDomtureConfig): Promise<Domture> {
-  const dom = createWebpackJSDOM(config.jsdomConstructorOptions)
+  const dom = createWebpackJSDOM(config.html, config.jsdomConstructorOptions)
   mixWebpack(dom, config)
   extendJSDOM(dom, config)
   preloadScripts(dom, config.preloadScripts, config.rootDir)
@@ -21,12 +21,12 @@ export async function createWebpackDomture(config: WebpackDomtureConfig): Promis
   return dom as Domture
 }
 
-function createWebpackJSDOM(givenOptions: Partial<ConstructorOptions> = {}) {
+function createWebpackJSDOM(html = '', givenOptions: Partial<ConstructorOptions> = {}) {
   const options = unpartial<ConstructorOptions>(givenOptions, {
     url,
     runScripts: 'dangerously'
   })
-  return new JSDOM('', options)
+  return new JSDOM(html, options)
 }
 function validateWebpackConfig(config: webpack.Configuration | undefined) {
   if (!config) return
