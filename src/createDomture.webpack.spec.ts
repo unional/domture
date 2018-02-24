@@ -266,3 +266,8 @@ test('config webpack directly', async t => {
   const foo = await domture.import('./index')
   t.is(foo(), 'foo')
 })
+
+test('config with html', async t => {
+  const domture = await createDomture({ html: '<p>abc</p>' })
+  t.is(domture.window.document.getElementsByTagName('p').length, 1)
+})

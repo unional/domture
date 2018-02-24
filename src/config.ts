@@ -20,7 +20,12 @@ export interface DomtureConfigBase {
 
 export interface WebpackDomtureConfig extends DomtureConfigBase {
   loader: 'webpack',
-  webpackConfig?: webpack.Configuration
+  collectCoverage: boolean,
+  webpackConfig?: webpack.Configuration,
+  /**
+   * HTML to be used on JSDOM.
+   */
+  html?: string
 }
 
 export interface SystemJSDomtureConfig extends DomtureConfigBase {
@@ -38,5 +43,6 @@ export const defaultConfig: WebpackDomtureConfig = {
   loader: 'webpack',
   packageManager: 'npm',
   rootDir: '.',
+  collectCoverage: false,
   transpiler: 'none'
 }
