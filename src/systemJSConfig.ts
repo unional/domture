@@ -97,7 +97,7 @@ function fixMeta(sys, meta) {
   if (meta) {
     sys.meta = {}
     Object.keys(meta).forEach(k => {
-      sys.meta[`app/${k}`] = meta![k]
+      sys.meta[`app/${k}`] = meta[k]
     })
   }
 }
