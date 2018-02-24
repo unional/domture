@@ -15,7 +15,9 @@ export interface DomtureConfigBase {
   rootDir: string,
   transpiler: Transpiler,
   preloadScripts?: string[],
-  jsdomConstructorOptions?: ConstructorOptions
+  // `@types/jsdom` is not updated with some of the options.
+  // enable any key
+  jsdomConstructorOptions?: ConstructorOptions & { [k: string]: any }
 }
 
 export interface WebpackDomtureConfig extends DomtureConfigBase {
