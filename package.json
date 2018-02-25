@@ -98,6 +98,6 @@
     "systemjs-plugin-domture": "^0.1.2",
     "ts-loader": "^3.5.0",
     "unpartial": "^0.4.1",
-    "webpack": "^3.11.0"
+    "webpack": "^4.0.0"
   }
 }
