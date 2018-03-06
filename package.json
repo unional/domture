@@ -85,7 +85,7 @@
   "dependencies": {
     "@types/jsdom": "^11.0.4",
     "@types/systemjs": "^0.20.6",
-    "@types/webpack": "^3.8.8",
+    "@types/webpack": "^4.0.0",
     "@unional/logging": "^0.3.0",
     "camel-case": "^3.0.0",
     "file-url": "^2.0.2",
