@@ -86,7 +86,7 @@
     "@types/jsdom": "^11.0.4",
     "@types/systemjs": "^0.20.6",
     "@types/webpack": "^4.0.0",
-    "@unional/logging": "^0.3.0",
+    "@unional/logging": "^0.4.0",
     "camel-case": "^3.0.0",
     "file-url": "^2.0.2",
     "istanbul-instrumenter-loader": "^3.0.0",
