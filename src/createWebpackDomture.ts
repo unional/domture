@@ -81,7 +81,7 @@ function mixWebpack(jsdom: JSDOM, config: WebpackDomtureConfig) {
 
     return new Promise<string>((a, r) => {
       const compiler = webpack(getWebpackOptions())
-      compiler.outputFileSystem = memfs
+      compiler.outputFileSystem = memfs as any
       compiler.run((err, stats) => {
         if (err) r(err)
         else if (stats.hasErrors()) r(stats.toJson().errors)
