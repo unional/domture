@@ -105,6 +105,7 @@ function mixWebpack(jsdom: JSDOM, config: WebpackDomtureConfig) {
     })
 
     function getWebpackOptions() {
+      webpackOptions.mode = 'development'
       webpackOptions.entry = config.transpiler === 'typescript' ?
         resolveTSID(config.rootDir, identifier) :
         resolveID(config.rootDir, identifier)
