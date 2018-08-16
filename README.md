@@ -28,6 +28,8 @@ You also lost the magic from `systemjs`.
 
 By default, `webpack` will be used as the default loader.
 
+For projects using `webpack@4`, please use `domture@2`. For `webpack@3`, please use `domture@1`
+
 ## Usage
 
 ```ts
