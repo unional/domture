@@ -71,6 +71,7 @@
     "color-map": "^1.1.0",
     "dependency-check": "^3.2.0",
     "eslint": "^5.3.0",
+    "eslint-plugin-harmony": "^1.0.4",
     "global-store": "^0.7.3",
     "make-error": "^1.3.4",
     "nyc": "^12.0.2",
@@ -87,7 +88,6 @@
     "@types/webpack": "^4.4.10",
     "@unional/logging": "^0.5.3",
     "camel-case": "^3.0.0",
-    "eslint-plugin-harmony": "^1.0.4",
     "file-url": "^2.0.2",
     "istanbul-instrumenter-loader": "^3.0.1",
     "jsdom": "^11.12.0",
@@ -96,8 +96,8 @@
     "plugin-typescript": "^8.0.0",
     "systemjs": "^0.21.4",
     "systemjs-plugin-domture": "^0.1.2",
-    "ts-loader": "^3.5.0",
+    "ts-loader": "^4.4.2",
     "unpartial": "^0.4.1",
-    "webpack": "^3.12.0"
+    "webpack": "^4.16.5"
   }
 }
