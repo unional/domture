@@ -83,7 +83,7 @@
     "typescript": "^3.0.1"
   },
   "dependencies": {
-    "@types/jsdom": "^11.0.6",
+    "@types/jsdom": "^12.2.0",
     "@types/systemjs": "^0.20.6",
     "@types/webpack": "^4.4.10",
     "@unional/logging": "^0.5.3",
