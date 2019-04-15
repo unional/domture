@@ -88,7 +88,7 @@
     "@types/webpack": "^4.4.10",
     "@unional/logging": "^0.5.3",
     "camel-case": "^3.0.0",
-    "file-url": "^2.0.2",
+    "file-url": "^3.0.0",
     "istanbul-instrumenter-loader": "^3.0.1",
     "jsdom": "^12.0.0",
     "lodash.uniq": "^4.5.0",
