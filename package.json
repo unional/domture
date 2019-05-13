@@ -1,36 +1,7 @@
 {
   "name": "domture",
-  "description": "load packages and scripts on jsdom",
   "version": "0.0.0-development",
-  "main": "dist-es5/index.js",
-  "module": "dist-es2015/index.js",
-  "typings": "dist-es5/index.d.ts",
-  "files": [
-    "dist",
-    "dist-es5",
-    "dist-es2015"
-  ],
-  "scripts": {
-    "build": "npm run clean && npm run build-es5",
-    "build-es2015": "tsc -p tsconfig.es2015.json",
-    "build-es5": "tsc -p tsconfig.es5.json",
-    "clean": "rimraf dist dist-es5 dist-es2015",
-    "dc": "npm run dependency-check",
-    "dependency-check": "dependency-check . --unused --no-dev -i istanbul-instrumenter-loader -i plugin-typescript -i ts-loader -i systemjs -i systemjs-plugin-domture -i @types/systemjs -i @types/jsdom -i @types/webpack && dependency-check . --missing --no-dev",
-    "lint": "tslint -p tsconfig.json 'src/**/*.ts'",
-    "prepublishOnly": "npm run build",
-    "verify": "npm run lint && npm run coverage && npm run dependency-check",
-    "coverage": "nyc npm test",
-    "coveralls": "nyc report --reporter=text-lcov | coveralls",
-    "remove-spec": "rimraf dist-es5/**/*.spec.*",
-    "test": "npm run clean && tsc && ava",
-    "watch": "npm run clean && node scripts/watch.js",
-    "semantic-release": "semantic-release"
-  },
-  "author": {
-    "name": "Homa Wong",
-    "email": "homawong@gmail.com"
-  },
+  "description": "load packages and scripts on jsdom",
   "homepage": "https://github.com/unional/domture",
   "bugs": {
     "url": "https://github.com/unional/domture/issues"
@@ -40,64 +11,61 @@
     "url": "https://github.com/unional/domture.git"
   },
   "license": "MIT",
-  "ava": {
-    "files": [
-      "dist-es5/**/*.spec.js"
-    ],
-    "source": [
-      "scripts/*.js",
-      "dist-es5/**/*.js",
-      "fixtures/**/*",
-      "*.json"
-    ],
-    "require": [
-      "./scripts/setup-browser-env.js",
-      "./scripts/setup-test-env.js"
-    ]
+  "author": {
+    "name": "Homa Wong",
+    "email": "homawong@gmail.com"
   },
-  "nyc": {
-    "exclude": [
-      "scripts",
-      "**/*.spec.*",
-      "**/fixtures/**/*"
-    ]
-  },
-  "devDependencies": {
-    "@types/lodash.uniq": "^4.5.4",
-    "@types/memory-fs": "^0.3.1",
-    "@types/node": "^10.7.1",
-    "aurelia-logging-color": "^1.0.0",
-    "ava": "^0.25.0",
-    "color-map": "^1.1.0",
-    "dependency-check": "^3.2.0",
-    "eslint": "^5.3.0",
-    "eslint-plugin-harmony": "^1.0.4",
-    "global-store": "^0.7.3",
-    "make-error": "^1.3.4",
-    "nyc": "^12.0.2",
-    "rimraf": "^2.6.2",
-    "semantic-release": "^15.9.8",
-    "ts-node": "^7.0.1",
-    "tslint": "^5.11.0",
-    "tslint-config-unional": "^0.10.0",
-    "typescript": "^3.0.1"
+  "files": [
+    "dist",
+    "dist-es5",
+    "dist-es2015"
+  ],
+  "main": "dist-es5/index.js",
+  "module": "dist-es2015/index.js",
+  "typings": "dist-es5/index.d.ts",
+  "scripts": {
+    "build": "npm run clean && npm run build-es5",
+    "build-es2015": "tsc -p tsconfig.es2015.json",
+    "build-es5": "tsc -p tsconfig.es5.json",
+    "clean": "rimraf dist dist-es5 dist-es2015",
+    "coverage": "jest --coverage --reporters=default",
+    "dc": "npm run dependency-check",
+    "dependency-check": "dependency-check . --unused --no-dev -i istanbul-instrumenter-loader -i plugin-typescript -i ts-loader -i systemjs -i systemjs-plugin-domture -i @types/systemjs -i @types/jsdom -i @types/webpack && dependency-check . --missing --no-dev",
+    "lint": "tslint -p tsconfig.json",
+    "prepublishOnly": "npm run build",
+    "remove-spec": "rimraf dist-es5/**/*.spec.*",
+    "semantic-release": "semantic-release",
+    "test": "jest --reporters=default",
+    "verify": "npm run lint && npm run build && npm run dependency-check && npm run coverage",
+    "watch": "jest --watch"
   },
   "dependencies": {
-    "@types/jsdom": "^11.0.6",
+    "@types/jsdom": "^12.2.3",
     "@types/systemjs": "^0.20.6",
-    "@types/webpack": "^4.4.10",
-    "@unional/logging": "^0.5.3",
+    "@types/webpack": "^4.4.31",
+    "@unional/logging": "^1.0.5",
     "camel-case": "^3.0.0",
-    "file-url": "^2.0.2",
+    "file-url": "^3.0.0",
     "istanbul-instrumenter-loader": "^3.0.1",
-    "jsdom": "^12.0.0",
+    "jsdom": "^15.1.0",
     "lodash.uniq": "^4.5.0",
     "memory-fs": "^0.4.1",
     "plugin-typescript": "^8.0.0",
     "systemjs": "^0.21.4",
     "systemjs-plugin-domture": "^0.1.2",
-    "ts-loader": "^4.4.2",
-    "unpartial": "^0.5.0",
-    "webpack": "^4.16.5"
+    "ts-loader": "^6.0.0",
+    "unpartial": "^0.6.3",
+    "webpack": "^4.31.0"
+  },
+  "devDependencies": {
+    "@types/lodash.uniq": "^4.5.6",
+    "@types/memory-fs": "^0.3.2",
+    "@unional/devpkg-node": "^1.3.0",
+    "assertron": "^7.0.2",
+    "aurelia-logging-color": "^1.0.5",
+    "color-map": "^1.1.0",
+    "global-store": "^0.8.1",
+    "make-error": "^1.3.5",
+    "ts-node": "^8.1.0"
   }
 }

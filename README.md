@@ -33,10 +33,9 @@ For projects using `webpack@4`, please use `domture@2`. For `webpack@3`, please 
 ## Usage
 
 ```ts
-import test from 'ava' // or your favorite test runner
 import { createDomture } from 'domture'
 
-test('basic usage', async t => {
+test('basic usage',async () => {
   const domture = await createDomture()
 
   // load package `foo`
@@ -46,7 +45,7 @@ test('basic usage', async t => {
   const config = await domture.import('./config')
 })
 
-test('customize', async t => {
+test('customize', async () => {
   const domture = await createDomture({
     // Where to resolve relative path.
     rootDir: './lib',
@@ -60,7 +59,7 @@ test('customize', async t => {
     jsdomConstructorOptions: { ... }
   })
 })
-test('customize with webpack', async t => {
+test('customize with webpack', async () => {
   const domture = await createDomture({
     /**
      * devtool, entry, and output are preserved
@@ -71,7 +70,7 @@ test('customize with webpack', async t => {
   })
 })
 
-test('customize with systemjs', async t => {
+test('customize with systemjs', async () => {
   const domture = await createDomture({
     loader: 'systemjs',
     // Indicates which extension to try during `import()`

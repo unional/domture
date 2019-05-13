@@ -1,4 +1,4 @@
-import { unpartialRecursively } from 'unpartial'
+import { requiredDeep } from 'unpartial'
 
 import { SystemJSDomtureConfig } from './config'
 
@@ -82,8 +82,8 @@ export function toSystemJSConfig(config: SystemJSDomtureConfig) {
   const { systemjsConfig = {} } = config
   let sys: any = packageManagers[config.packageManager]()
 
-  sys = unpartialRecursively(sys, transpilerBuilders[config.transpiler](config.rootDir))
-  sys = unpartialRecursively(sys, systemjsConfig)
+  sys = requiredDeep(sys, transpilerBuilders[config.transpiler](config.rootDir))
+  sys = requiredDeep(sys, systemjsConfig)
   fixMeta(sys, systemjsConfig.meta)
 
   return sys
