@@ -1,45 +1,46 @@
-import test from 'ava'
+import t from 'assert'
+import a from 'assertron'
 
 import { createDomture } from './index'
 
-test('import cjs', async t => {
+test('import cjs', async () => {
   const domture = await createDomture({
     loader: 'systemjs'
   })
   const makeError = await domture.import('make-error')
-  t.is(typeof makeError, 'function')
+  t.strictEqual(typeof makeError, 'function')
 })
 
-test('import es6', async t => {
+test('import es6', async () => {
   const domture = await createDomture({
     loader: 'systemjs'
   })
 
   const globalStore = await domture.import('global-store')
 
-  t.is(typeof globalStore, 'object')
-  t.is(globalStore.default.name, 'create')
+  t.strictEqual(typeof globalStore, 'object')
+  t.strictEqual(globalStore.default.name, 'createStore')
 })
 
-test('import relative with default rootDir (".")', async t => {
+test('import relative with default rootDir (".")', async () => {
   const domture = await createDomture({
     loader: 'systemjs'
   })
 
   const foo = await domture.import('./fixtures/cjs/foo.js')
-  t.not(foo, undefined)
+  t.notStrictEqual(foo, undefined)
 })
 
-test('import relative', async t => {
+test('import relative', async () => {
   const domture = await createDomture({
     loader: 'systemjs',
     rootDir: './fixtures/cjs'
   })
   const foo = await domture.import('./index')
-  t.is(typeof foo, 'function')
+  t.strictEqual(typeof foo, 'function')
 })
 
-test('fix missing main', async t => {
+test('fix missing main', async () => {
   const domture = await createDomture({
     loader: 'systemjs',
     rootDir: './fixtures/fix-main',
@@ -52,10 +53,10 @@ test('fix missing main', async t => {
     }
   })
   const m = await domture.import('./index')
-  t.is(m.name, 'makeError')
+  t.strictEqual(m.name, 'makeError')
 })
 
-test('use map', async t => {
+test('use map', async () => {
   const domture = await createDomture({
     loader: 'systemjs',
     rootDir: './fixtures/cjs',
@@ -66,12 +67,12 @@ test('use map', async t => {
     }
   })
   const foo = await domture.import('xyz')
-  t.is(typeof foo, 'function')
+  t.strictEqual(typeof foo, 'function')
   const foo2 = await domture.import('./index')
-  t.is(foo, foo2)
+  t.strictEqual(foo, foo2)
 })
 
-test('preload script', async t => {
+test('preload script', async () => {
   const domture = await createDomture({
     loader: 'systemjs',
     preloadScripts: [
@@ -79,42 +80,42 @@ test('preload script', async t => {
     ]
   })
 
-  t.not(domture.window.GlobalStore, undefined)
+  t.notStrictEqual(domture.window.GlobalStore, undefined)
 })
 
-test('preload color-map script', async t => {
+test('preload color-map script', async () => {
   const domture = await createDomture({
     loader: 'systemjs',
     preloadScripts: [
       require.resolve('color-map/dist/color-map.es5.js')
     ]
   })
-  t.not(domture.window.ColorMap, undefined)
+  t.notStrictEqual(domture.window.ColorMap, undefined)
 })
 
-test('import color-map module', async t => {
+test('import color-map module', async () => {
   const domture = await createDomture()
 
   const colorMap = await domture.import('color-map')
 
-  t.not(colorMap, undefined)
+  t.notStrictEqual(colorMap, undefined)
 })
 
-test('import global-store script file should fill global namespace', async t => {
+test('import global-store script file should fill global namespace', async () => {
   const harness = await createDomture({ loader: 'systemjs' })
   await harness.import('./node_modules/global-store/dist/global-store.es5.js')
 
-  t.not(harness.window.GlobalStore, undefined)
+  t.notStrictEqual(harness.window.GlobalStore, undefined)
 })
 
-test('import color-map script file should fill global namespace', async t => {
+test('import color-map script file should fill global namespace', async () => {
   const harness = await createDomture({ loader: 'systemjs' })
   await harness.import(require.resolve('color-map/dist/color-map.es5.js'))
 
-  t.not(harness.window.ColorMap, undefined)
+  t.notStrictEqual(harness.window.ColorMap, undefined)
 })
 
-test('preloadScripts should fill global namespace', async t => {
+test('preloadScripts should fill global namespace', async () => {
   const harness = await createDomture(
     {
       loader: 'systemjs',
@@ -123,10 +124,10 @@ test('preloadScripts should fill global namespace', async t => {
         './node_modules/global-store/dist/global-store.es5.js'
       ]
     })
-  t.not(harness.window.GlobalStore, undefined)
+  t.notStrictEqual(harness.window.GlobalStore, undefined)
 })
 
-test('preloadScripts should run sequentially', async t => {
+test('preloadScripts should run sequentially', async () => {
   const harness = await createDomture(
     {
       loader: 'systemjs',
@@ -137,43 +138,44 @@ test('preloadScripts should run sequentially', async t => {
       ]
     })
 
-  t.not(harness.window.boo, undefined)
-  t.is(harness.window.boo.boo, 1)
+  t.notStrictEqual(harness.window.boo, undefined)
+  t.strictEqual(harness.window.boo.boo, 1)
 })
 
-test(`using jsdom constructor options`, async t => {
-  t.plan(1)
+test(`using jsdom constructor options`, async () => {
+  let actual
   await createDomture({
     loader: 'systemjs',
     jsdomConstructorOptions: {
       beforeParse(window) {
-        t.not(window, undefined)
+        actual = window
       }
     }
   })
+  t.notStrictEqual(actual, undefined)
 })
 
-test(`loadScript() with relative path`, async t => {
+test(`loadScript() with relative path`, async () => {
   const domture = await createDomture({
     loader: 'systemjs',
     rootDir: './fixtures/global-deps'
   })
   await domture.loadScript('./foo')
 
-  t.is(domture.window.foo.a, 1)
+  t.strictEqual(domture.window.foo.a, 1)
 })
 
-test(`loadScript() with relative path with extension`, async t => {
+test(`loadScript() with relative path with extension`, async () => {
   const domture = await createDomture({
     loader: 'systemjs',
     rootDir: './fixtures/global-deps'
   })
   await domture.loadScript('./foo.js')
 
-  t.is(domture.window.foo.a, 1)
+  t.strictEqual(domture.window.foo.a, 1)
 })
 
-test(`loadScript() with absolute path`, async t => {
+test(`loadScript() with absolute path`, async () => {
   const domture = await createDomture({
     loader: 'systemjs',
     rootDir: './fixtures/global-deps'
@@ -181,40 +183,40 @@ test(`loadScript() with absolute path`, async t => {
 
   await domture.loadScript(require.resolve('color-map/dist/color-map.es5.js'))
 
-  t.not(domture.window.ColorMap, undefined)
+  t.notStrictEqual(domture.window.ColorMap, undefined)
 })
 
-test(`loadScript() with invalid path`, async t => {
+test(`loadScript() with invalid path`, async () => {
   const domture = await createDomture({
     loader: 'systemjs',
     rootDir: './fixtures/global-deps'
   })
 
-  const err = await t.throws(domture.loadScript('./a.js'))
-  t.is(err.code, 'ENOENT')
+  const err = await a.throws<any>(domture.loadScript('./a.js'))
+  t.strictEqual(err.code, 'ENOENT')
 })
 
-test(`loadScriptSync() with relative path`, async t => {
+test.only(`loadScriptSync() with relative path`, async () => {
   const domture = await createDomture({
     loader: 'systemjs',
     rootDir: './fixtures/global-deps'
   })
   domture.loadScriptSync('./foo')
 
-  t.is(domture.window.foo.a, 1)
+  t.strictEqual(domture.window.foo.a, 1)
 })
 
-test(`loadScriptSync() with relative path with extension`, async t => {
+test(`loadScriptSync() with relative path with extension`, async () => {
   const domture = await createDomture({
     loader: 'systemjs',
     rootDir: './fixtures/global-deps'
   })
   domture.loadScriptSync('./foo.js')
 
-  t.is(domture.window.foo.a, 1)
+  t.strictEqual(domture.window.foo.a, 1)
 })
 
-test(`loadScriptSync() with absolute path`, async t => {
+test(`loadScriptSync() with absolute path`, async () => {
   const domture = await createDomture({
     loader: 'systemjs',
     rootDir: './fixtures/global-deps'
@@ -222,20 +224,20 @@ test(`loadScriptSync() with absolute path`, async t => {
 
   domture.loadScriptSync(require.resolve('color-map/dist/color-map.es5.js'))
 
-  t.not(domture.window.ColorMap, undefined)
+  t.notStrictEqual(domture.window.ColorMap, undefined)
 })
 
-test(`loadScriptSync() with invalid path`, async t => {
+test(`loadScriptSync() with invalid path`, async () => {
   const domture = await createDomture({
     loader: 'systemjs',
     rootDir: './fixtures/global-deps'
   })
 
-  const err = t.throws(() => domture.loadScriptSync('./a.js'))
-  t.is(err.code, 'ENOENT')
+  const err = a.throws<any>(() => domture.loadScriptSync('./a.js'))
+  t.strictEqual(err.code, 'ENOENT')
 })
 
-test(`User metadata to override format detection`, async t => {
+test(`User metadata to override format detection`, async () => {
   const domture = await createDomture({
     loader: 'systemjs',
     rootDir: './fixtures/global-detection',
@@ -249,5 +251,5 @@ test(`User metadata to override format detection`, async t => {
   })
 
   await domture.import('./color-map.js')
-  t.not(domture.window.ColorMap, undefined)
+  t.notStrictEqual(domture.window.ColorMap, undefined)
 })
