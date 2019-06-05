@@ -1,4 +1,4 @@
-import { test } from 'ava'
+import test from 'ava'
 import { createDomture } from './index'
 
 
@@ -29,14 +29,7 @@ test('with rootDir should still load packages', async t => {
 
   const globalStore = await domture.import('global-store')
   t.is(typeof globalStore, 'object')
-  t.is(globalStore.default.name, 'create')
-})
-
-test('import global script', async t => {
-  const domture = await createDomture({ transpiler: 'typescript' })
-  await domture.import('./fixtures/ts-global/MyCompany/component/TextBox')
-  const textBox = domture.window.MyCompany.component.TextBox
-  t.deepEqual(textBox, { a: 1 })
+  t.is(globalStore.default.name, 'createStore')
 })
 
 test('import global script', async t => {

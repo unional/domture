@@ -1,5 +1,5 @@
 import test from 'ava'
-
+import a from 'assertron'
 import { createDomture } from './index'
 
 test('import cjs', async t => {
@@ -18,7 +18,7 @@ test('import es6', async t => {
   const globalStore = await domture.import('global-store')
 
   t.is(typeof globalStore, 'object')
-  t.is(globalStore.default.name, 'create')
+  t.is(globalStore.default.name, 'createStore')
 })
 
 test('import relative with default rootDir (".")', async t => {
@@ -190,7 +190,7 @@ test(`loadScript() with invalid path`, async t => {
     rootDir: './fixtures/global-deps'
   })
 
-  const err = await t.throws(domture.loadScript('./a.js'))
+  const err = await a.throws<NodeJS.ErrnoException>(domture.loadScript('./a.js'))
   t.is(err.code, 'ENOENT')
 })
 
@@ -231,7 +231,7 @@ test(`loadScriptSync() with invalid path`, async t => {
     rootDir: './fixtures/global-deps'
   })
 
-  const err = t.throws(() => domture.loadScriptSync('./a.js'))
+  const err = t.throws<NodeJS.ErrnoException>(() => domture.loadScriptSync('./a.js'))
   t.is(err.code, 'ENOENT')
 })
 
