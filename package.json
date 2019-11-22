@@ -67,7 +67,7 @@
     "ava": "^2.0.0",
     "color-map": "^1.1.0",
     "dependency-check": "^3.2.0",
-    "eslint": "^5.16.0",
+    "eslint": "^6.7.0",
     "eslint-plugin-harmony": "^1.0.4",
     "global-store": "^0.8.2",
     "make-error": "^1.3.4",
