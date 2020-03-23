@@ -41,7 +41,7 @@
     "watch": "npm run clean && node scripts/watch.js"
   },
   "dependencies": {
-    "@types/jsdom": "^11.0.6",
+    "@types/jsdom": "^16.1.1",
     "@types/systemjs": "^0.20.6",
     "@types/webpack": "^4.4.32",
     "@unional/logging": "^1.0.5",
